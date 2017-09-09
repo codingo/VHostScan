@@ -82,19 +82,19 @@ class virtual_host_scanner(object):
 
     def likely_matches(self):
         if self.completed_scan is False:
-            print("Likely matches cannot be printed as a scan has not yet been run.")
+            print("[!] Likely matches cannot be printed as a scan has not yet been run.")
             return      
 
-        print("\n[#] Most likely matches with a unique count of %s or less:" % self.unique_depth)
+        print("\n[+] Most likely matches with a unique count of %s or less:" % self.unique_depth)
 
-        d={}
-
+        # segment results from previous scan into usable results
+        segmented_data={}
         for item in self.results:
-            r=item.split(",")
-            d[r[0]]=r[1]
+            result = item.split(",")
+            segmented_data[result[0]] = result[1]
 
-        df= pd.DataFrame([[key, value] for key, value in d.items()], columns=["key_col", "val_col"])
-        d=df.groupby("val_col").filter(lambda x: len(x) <= self.unique_depth)
-        matches=((d["key_col"].values).tolist())
+        dataframe = pd.DataFrame([[key, value] for key, value in segmented_data.items()], columns=["key_col", "val_col"])
+        segmented_data = dataframe.groupby("val_col").filter(lambda x: len(x) <= self.unique_depth)
+        matches = ((segmented_data["key_col"].values).tolist())
 
         return matches

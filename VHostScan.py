@@ -26,7 +26,8 @@ def main():
 
     scanner = virtual_host_scanner(arguments.target_hosts, arguments.port, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
     scanner.scan()
-    print(scanner.likely_matches())
+
+    for p in scanner.likely_matches(): print("  [>] %s" % p)
 
 if __name__ == "__main__":
     main()
