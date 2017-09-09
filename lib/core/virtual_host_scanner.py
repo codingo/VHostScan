@@ -17,7 +17,7 @@ class virtual_host_scanner(object):
         output: folder to write output file to
     """
      
-    def __init__(self, target, port=80, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, 
+    def __init__(self, target, port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, 
                  wordlist="./wordlists/virtual-host-scanning.txt"):
         self.target = target
         self.port = port
@@ -25,9 +25,11 @@ class virtual_host_scanner(object):
         self.ignore_content_length = ignore_content_length
         self.wordlist = wordlist
         self.unique_depth = unique_depth
-        
+        self.ssl = ssl
+
         self.completed_scan=False
         self.results = []
+
 
     def scan(self):
         print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (self.target, str(self.port), self.wordlist))
@@ -49,8 +51,7 @@ class virtual_host_scanner(object):
                 'Accept': '*/*'
             }
             
-            # todo: to be made redundant/replaced with a --ssl flag? Current implementation limits ssl severely
-            dest_url = '{}://{}:{}/'.format('https' if int(self.port) == 443 else 'http', self.target, self.port)
+            dest_url = '{}://{}:{}/'.format('https' if self.ssl else 'http', self.target, self.port)
 
             try:
                 res = requests.get(dest_url, headers=headers, verify=False)
@@ -84,8 +85,6 @@ class virtual_host_scanner(object):
         if self.completed_scan is False:
             print("[!] Likely matches cannot be printed as a scan has not yet been run.")
             return      
-
-        print("\n[+] Most likely matches with a unique count of %s or less:" % self.unique_depth)
 
         # segment results from previous scan into usable results
         segmented_data={}

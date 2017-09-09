@@ -16,17 +16,21 @@ def main():
     print_banner()
     parser = ArgumentParser()
     parser.add_argument("-t",   dest="target_hosts", required=True, help="Set a target range of addresses to target. Ex 10.11.1.1-255" )
-    parser.add_argument("-w",   dest="wordlist", required=False, help="Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt", default="./wordlists/virtual-host-scanning.txt")
+    parser.add_argument("-w",   dest="wordlist", required=False, type=str, help="Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt", default="./wordlists/virtual-host-scanning.txt")
     parser.add_argument("-p",   dest="port", required=False, help="Set the port to use. Leave blank to use discovered ports. Useful to force virtual host scanning on non-standard webserver ports (default 80).", default=80)
 
     parser.add_argument('--ignore-http-codes', dest='ignore_http_codes', type=str, help='Comma separated list of http codes to ignore with virtual host scans (default 404).', default='404')
     parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount. This may become useful when a server returns a static page on every virtual host guess.', default=0)
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
+    parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP.", default=False)
     arguments = parser.parse_args()
+        
 
-    scanner = virtual_host_scanner(arguments.target_hosts, arguments.port, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+
+    scanner = virtual_host_scanner(arguments.target_hosts, arguments.port, arguments.ssl, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
     scanner.scan()
-
+    
+    print("\n[+] Most likely matches with a unique count of %s or less:" % arguments.unique_depth)
     for p in scanner.likely_matches(): print("  [>] %s" % p)
 
 if __name__ == "__main__":
