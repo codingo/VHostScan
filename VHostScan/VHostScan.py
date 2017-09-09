@@ -3,17 +3,8 @@
 import os
 import sys
 from argparse import ArgumentParser
+from lib.core.virtual_host_scanner import *
 
-try:
-    from lib.core.virtual_host_scanner import *
-
-except KeyboardInterrupt:
-    print("user aborted")
-    raise SystemExit
-
-except ModuleNotFoundError:
-    print("Not all modules could be loaded. Please reclone from the master branch on https://github.com/codingo/VHostScan or use a tagged release.")
-    raise SystemExit
 
 def print_banner():
     print("+-+-+-+-+-+-+-+-+-+  v. 0.1")
@@ -48,7 +39,7 @@ def main():
 
     scanner = virtual_host_scanner(arguments.target_hosts, arguments.output_directory, arguments.port, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
     scanner.scan()
-    scanner.show_likely_matches()
+    print(scanner.likely_matches())
 
 if __name__ == "__main__":
     main()
