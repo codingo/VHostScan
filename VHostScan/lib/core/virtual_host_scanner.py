@@ -1,5 +1,6 @@
 import os
 import requests
+import hashlib
 
 class virtual_host_scanner(object):
     """Virtual host scanning class
@@ -15,14 +16,17 @@ class virtual_host_scanner(object):
         output: folder to write output file to
     """
      
-    def __init__(self, target, output, port=80, ignore_http_codes='404', ignore_content_length=0, wordlist="./wordlist/virtual-host-scanning.txt"):
+    def __init__(self, target, output, port=80, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, wordlist="./wordlist/virtual-host-scanning.txt"):
         self.target = target
         self.output = output + '/' + target + '_virtualhosts.txt'
         self.port = port
         self.ignore_http_codes = list(map(int, ignore_http_codes.replace(' ', '').split(',')))
         self.ignore_content_length = ignore_content_length
         self.wordlist = wordlist
-
+        self.unique_depth = unique_depth
+        
+        self.completed_scan=False
+        self.results = ''
 
     def scan(self):
         print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (self.target, str(self.port), self.wordlist))
@@ -31,7 +35,7 @@ class virtual_host_scanner(object):
             print("[>] Ignoring Content length: %s" % (self.ignore_content_length))
 
         if not os.path.exists(self.wordlist):
-            print("[!] Wordlist %s doesn't exist, exiting virtual host scanner." % self.wordlist)
+            print("[!] Wordlist %s doesn't exist, ending scan." % self.wordlist)
             return
         
         virtual_host_list = open(self.wordlist).read().splitlines()
@@ -45,6 +49,7 @@ class virtual_host_scanner(object):
                 'Accept': '*/*'
             }
             
+            # to be made redundant with a --ssl flag? Current implementation limits ssl severely
             dest_url = '{}://{}:{}/'.format('https' if int(self.port) == 443 else 'http', self.target, self.port)
 
             try:
@@ -58,11 +63,21 @@ class virtual_host_scanner(object):
             if self.ignore_content_length > 0 and self.ignore_content_length == int(res.headers.get('content-length')):
                 continue
 
-            output = 'Found: {} (code: {}, length: {})'.format(hostname, res.status_code, res.headers.get('content-length'))
-            results += output + '\n'
-            
+            page_hash = hashlib.sha256(res.text.encode('utf-8')).hexdigest()
+            output = '[#] Found: {} (code: {}, length: {}, hash: {})'.format(hostname, res.status_code, res.headers.get('content-length'), page_hash)
+
             print(output)
             for key, val in res.headers.items():
                 output = '  {}: {}'.format(key, val)
-                results += output + '\n'
+                self.results += output + '\n'
                 print(output)
+            
+            self.results += hostname + ',' + page_hash + '\n'
+        self.completed_scan=True
+
+
+    def show_likely_matches(self):
+        if self.completed_scan is False:
+            print("Likely matches cannot be printed as a scan has not yet been run.")
+            return
+        print("\n[>] Most likely matches with a unique count <=%s:" % self.unique_depth)

@@ -50,8 +50,9 @@ def main():
 
     print_banner()
 
-    scanner = virtual_host_scanner(arguments.target_hosts, arguments.output_directory, arguments.port, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+    scanner = virtual_host_scanner(arguments.target_hosts, arguments.output_directory, arguments.port, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
     scanner.scan()
+    scanner.show_likely_matches()
 
 if __name__ == "__main__":
     main()
