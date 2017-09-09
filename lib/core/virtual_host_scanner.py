@@ -17,29 +17,21 @@ class virtual_host_scanner(object):
         output: folder to write output file to
     """
      
-    def __init__(self, target, output, port=80, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, 
+    def __init__(self, target, port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, 
                  wordlist="./wordlists/virtual-host-scanning.txt"):
         self.target = target
-        self.output = output + '/' + target + '_virtualhosts.txt'
         self.port = port
         self.ignore_http_codes = list(map(int, ignore_http_codes.replace(' ', '').split(',')))
         self.ignore_content_length = ignore_content_length
         self.wordlist = wordlist
         self.unique_depth = unique_depth
-        
+        self.ssl = ssl
+
         self.completed_scan=False
         self.results = []
 
-    def scan(self):
-        print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (self.target, str(self.port), self.wordlist))
-        print("[>] Ignoring HTTP codes: %s" % (self.ignore_http_codes))
-        if(self.ignore_content_length > 0):
-            print("[>] Ignoring Content length: %s" % (self.ignore_content_length))
 
-        if not os.path.exists(self.wordlist):
-            print("[!] Wordlist %s doesn't exist, ending scan." % self.wordlist)
-            return
-        
+    def scan(self):
         virtual_host_list = open(self.wordlist).read().splitlines()
 
         for virtual_host in virtual_host_list:
@@ -50,8 +42,7 @@ class virtual_host_scanner(object):
                 'Accept': '*/*'
             }
             
-            # todo: to be made redundant/replaced with a --ssl flag? Current implementation limits ssl severely
-            dest_url = '{}://{}:{}/'.format('https' if int(self.port) == 443 else 'http', self.target, self.port)
+            dest_url = '{}://{}:{}/'.format('https' if self.ssl else 'http', self.target, self.port)
 
             try:
                 res = requests.get(dest_url, headers=headers, verify=False)
@@ -83,19 +74,17 @@ class virtual_host_scanner(object):
 
     def likely_matches(self):
         if self.completed_scan is False:
-            print("Likely matches cannot be printed as a scan has not yet been run.")
+            print("[!] Likely matches cannot be printed as a scan has not yet been run.")
             return      
 
-        print("\n[#] Most likely matches with a unique count of %s or less:" % self.unique_depth)
-
-        d={}
-
+        # segment results from previous scan into usable results
+        segmented_data={}
         for item in self.results:
-            r=item.split(",")
-            d[r[0]]=r[1]
+            result = item.split(",")
+            segmented_data[result[0]] = result[1]
 
-        df= pd.DataFrame([[key, value] for key, value in d.items()], columns=["key_col", "val_col"])
-        d=df.groupby("val_col").filter(lambda x: len(x) <= self.unique_depth)
-        matches=((d["key_col"].values).tolist())
+        dataframe = pd.DataFrame([[key, value] for key, value in segmented_data.items()], columns=["key_col", "val_col"])
+        segmented_data = dataframe.groupby("val_col").filter(lambda x: len(x) <= self.unique_depth)
+        matches = ((segmented_data["key_col"].values).tolist())
 
         return matches

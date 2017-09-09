@@ -9,37 +9,43 @@ from lib.core.virtual_host_scanner import *
 def print_banner():
     print("+-+-+-+-+-+-+-+-+-+  v. 0.1")
     print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
-    print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan")
+    print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
 
 
 def main():
+    print_banner()
     parser = ArgumentParser()
     parser.add_argument("-t",   dest="target_hosts", required=True, help="Set a target range of addresses to target. Ex 10.11.1.1-255" )
-    parser.add_argument("-o",   dest="output_directory", required=True, help="Set the output directory. Ex /root/Documents/labs/")
-    parser.add_argument("-w",   dest="wordlist", required=False, help="Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt", default="./wordlists/virtual-host-scanning.txt")
-    parser.add_argument("-p",   dest="port", required=False, help="Set the port to use. Leave blank to use discovered ports. Useful to force virtual host scanning on non-standard webserver ports (default 80).", default=80)
+    parser.add_argument("-w",   dest="wordlist", required=False, type=str, help="Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt", default="./wordlists/virtual-host-scanning.txt")
+    parser.add_argument("-p",   dest="port", required=False, help="Set the port to use (default 80).", default=80)
 
     parser.add_argument('--ignore-http-codes', dest='ignore_http_codes', type=str, help='Comma separated list of http codes to ignore with virtual host scans (default 404).', default='404')
-    parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount. This may become useful when a server returns a static page on every virtual host guess.', default=0)
+    parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount.', default=0)
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
+    parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP.", default=False)
     arguments = parser.parse_args()
 
-    if len(sys.argv) == 1:
-        print_banner()
-        parser.error("No arguments given.")
-        parser.print_usage
+    if not os.path.exists(arguments.wordlist):
+        print("[!] Wordlist %s doesn't exist, ending scan." % arguments.wordlistt)
         sys.exit()
 
-    if arguments.output_directory.endswith('/' or '\\'):
-        arguments.output_directory = arguments.output_directory[:-1]
-    if arguments.target_hosts.endswith('/' or '\\'):
-        arguments.target_hosts = arguments.target_hosts[:-1]
+    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, str(arguments.port), arguments.wordlist))
+    
+    if(arguments.ssl):
+        print("[>] SSL flag set, sending all results over HTTPS")
 
-    print_banner()
+    print("[>] Ignoring HTTP codes: %s" % (arguments.ignore_http_codes))
+    
+    if(arguments.ignore_content_length > 0):
+        print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
 
-    scanner = virtual_host_scanner(arguments.target_hosts, arguments.output_directory, arguments.port, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+    scanner = virtual_host_scanner(arguments.target_hosts, arguments.port, arguments.ssl, arguments.unique_depth, 
+                                   arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+    
     scanner.scan()
-    print(scanner.likely_matches())
+
+    print("\n[+] Most likely matches with a unique count of %s or less:" % arguments.unique_depth)
+    for p in scanner.likely_matches(): print("  [>] %s" % p)
 
 if __name__ == "__main__":
     main()
