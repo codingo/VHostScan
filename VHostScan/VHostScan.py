@@ -8,15 +8,11 @@ try:
     from lib.core.virtual_host_scanner import *
 
 except KeyboardInterrupt:
-    errMsg = "user aborted"
-    print(errMsg)
-
+    print("user aborted")
     raise SystemExit
 
 except ModuleNotFoundError:
-    errMsg = "Not all modules could be loaded. Please reclone from the master branch on https://github.com/codingo/VHostScan or use a tagged release."
-    print(errMsg)
-
+    print("Not all modules could be loaded. Please reclone from the master branch on https://github.com/codingo/VHostScan or use a tagged release.")
     raise SystemExit
 
 def print_banner():
