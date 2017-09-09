@@ -99,3 +99,5 @@ class virtual_host_scanner(object):
         matches=((d["key_col"].values).tolist())
 
         return matches
+
+    def page_difference_ratios
