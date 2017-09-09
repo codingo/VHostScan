@@ -32,3 +32,5 @@ v3.%s
 v3
 alpha
 alpha.%s
+bull
+dook
