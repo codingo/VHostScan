@@ -104,4 +104,3 @@ ENV/
 *.sln
 *.sqlite
 *.json
-/VHostScan/VHostScan.py
