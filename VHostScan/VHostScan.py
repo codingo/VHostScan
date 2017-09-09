@@ -3,21 +3,8 @@
 import os
 import sys
 from argparse import ArgumentParser
+from lib.core.virtual_host_scanner import *
 
-try:
-    from lib.core.virtual_host_scanner import *
-
-except KeyboardInterrupt:
-    errMsg = "user aborted"
-    print(errMsg)
-
-    raise SystemExit
-
-except ModuleNotFoundError:
-    errMsg = "Not all modules could be loaded. Please reclone from the master branch on https://github.com/codingo/VHostScan or use a tagged release."
-    print(errMsg)
-
-    raise SystemExit
 
 def print_banner():
     print("+-+-+-+-+-+-+-+-+-+  v. 0.1")
@@ -29,7 +16,7 @@ def main():
     parser = ArgumentParser()
     parser.add_argument("-t",   dest="target_hosts", required=True, help="Set a target range of addresses to target. Ex 10.11.1.1-255" )
     parser.add_argument("-o",   dest="output_directory", required=True, help="Set the output directory. Ex /root/Documents/labs/")
-    parser.add_argument("-w",   dest="wordlist", required=False, help="Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt", default=False)
+    parser.add_argument("-w",   dest="wordlist", required=False, help="Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt", default="./wordlists/virtual-host-scanning.txt")
     parser.add_argument("-p",   dest="port", required=False, help="Set the port to use. Leave blank to use discovered ports. Useful to force virtual host scanning on non-standard webserver ports (default 80).", default=80)
 
     parser.add_argument('--ignore-http-codes', dest='ignore_http_codes', type=str, help='Comma separated list of http codes to ignore with virtual host scans (default 404).', default='404')
@@ -50,8 +37,9 @@ def main():
 
     print_banner()
 
-    scanner = virtual_host_scanner(arguments.target_hosts, arguments.output_directory, arguments.port, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+    scanner = virtual_host_scanner(arguments.target_hosts, arguments.output_directory, arguments.port, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
     scanner.scan()
+    print(scanner.likely_matches())
 
 if __name__ == "__main__":
     main()
