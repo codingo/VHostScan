@@ -32,15 +32,6 @@ class virtual_host_scanner(object):
 
 
     def scan(self):
-        print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (self.target, str(self.port), self.wordlist))
-        print("[>] Ignoring HTTP codes: %s" % (self.ignore_http_codes))
-        if(self.ignore_content_length > 0):
-            print("[>] Ignoring Content length: %s" % (self.ignore_content_length))
-
-        if not os.path.exists(self.wordlist):
-            print("[!] Wordlist %s doesn't exist, ending scan." % self.wordlist)
-            return
-        
         virtual_host_list = open(self.wordlist).read().splitlines()
 
         for virtual_host in virtual_host_list:

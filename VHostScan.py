@@ -24,12 +24,26 @@ def main():
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
     parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP.", default=False)
     arguments = parser.parse_args()
-        
 
+    if not os.path.exists(arguments.wordlist):
+        print("[!] Wordlist %s doesn't exist, ending scan." % arguments.wordlistt)
+        sys.exit()
 
-    scanner = virtual_host_scanner(arguments.target_hosts, arguments.port, arguments.ssl, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
-    scanner.scan()
+    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, str(arguments.port), arguments.wordlist))
     
+    if(arguments.ssl):
+        print("[>] SSL flag set, sending all results over HTTPS")
+
+    print("[>] Ignoring HTTP codes: %s" % (arguments.ignore_http_codes))
+    
+    if(arguments.ignore_content_length > 0):
+        print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
+
+    scanner = virtual_host_scanner(arguments.target_hosts, arguments.port, arguments.ssl, arguments.unique_depth, 
+                                   arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+    
+    scanner.scan()
+
     print("\n[+] Most likely matches with a unique count of %s or less:" % arguments.unique_depth)
     for p in scanner.likely_matches(): print("  [>] %s" % p)
 
