@@ -29,7 +29,9 @@ def main():
         print("[!] Wordlist %s doesn't exist, ending scan." % arguments.wordlistt)
         sys.exit()
 
-    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, str(arguments.port), arguments.wordlist))
+    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
+                                                                                   str(arguments.port), 
+                                                                                   arguments.wordlist))
     
     if(arguments.ssl):
         print("[>] SSL flag set, sending all results over HTTPS")
