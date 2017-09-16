@@ -2,6 +2,7 @@ import os
 import requests
 import hashlib
 import pandas as pd
+from lib.core.discovered_host import *
 
 class virtual_host_scanner(object):
     """Virtual host scanning class
@@ -29,9 +30,14 @@ class virtual_host_scanner(object):
         self.unique_depth = unique_depth
         self.ssl = ssl
 
+        # this can be made redundant in future with better exceptions
         self.completed_scan=False
+        
+        # this is maintained until likely-matches is refactored to use new class
         self.results = []
-
+        
+        # store associated data for discovered hosts in array for oN, oJ, etc'
+        self.hosts = []
 
     def scan(self):
         virtual_host_list = open(self.wordlist).read().splitlines()
@@ -65,15 +71,21 @@ class virtual_host_scanner(object):
 
             # hash the page results to aid in identifing unique content
             page_hash = hashlib.sha256(res.text.encode('utf-8')).hexdigest()
-            output = '[#] Found: {} (code: {}, length: {}, hash: {})'.format(hostname, res.status_code, 
+            output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(hostname, res.status_code, 
                                                                              res.headers.get('content-length'), page_hash)
 
-            # print current results
-            print(output)
             for key, val in res.headers.items():
-                output = '  {}: {}'.format(key, val)
-                print(output)
-            
+                output += '  {}: {}\n'.format(key, val)
+
+            # print current results so feedback remains in "realtime"
+            print(output)
+
+            # temporary host class code
+            host = discovered_host()
+            host.hostname = hostname
+            host.response_code = res.status_code
+            self.hosts.append(host)
+
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
 

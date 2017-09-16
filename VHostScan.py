@@ -51,5 +51,7 @@ def main():
     print("\n[+] Most likely matches with a unique count of %s or less:" % arguments.unique_depth)
     for p in scanner.likely_matches(): print("  [>] %s" % p)
 
+    for p in scanner.hosts: print ("[!!!!] %s (%s)" % (p.hostname, p.response_code))
+
 if __name__ == "__main__":
     main()
