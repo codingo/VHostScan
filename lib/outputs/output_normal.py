@@ -2,4 +2,7 @@ from lib.core.discovered_host import *
 
 class output_normal(object):
     def __init__(self):
-        print("Placeholder class for later")
+        self.hosts = []
+
+    def print_current(self):
+        for p in self.hosts: print ("[!!!!] %s (%s) hash: %s" % (p.hostname, p.response_code, p.hash))

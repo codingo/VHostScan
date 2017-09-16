@@ -6,3 +6,4 @@ class discovered_host(object):
     def __init__(self):
         self.hostname = ''
         self.response_code = 0
+        self.hash = ''

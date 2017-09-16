@@ -84,6 +84,7 @@ class virtual_host_scanner(object):
             host = discovered_host()
             host.hostname = hostname
             host.response_code = res.status_code
+            host.hash = page_hash
             self.hosts.append(host)
 
             # add url and hash into array for likely matches

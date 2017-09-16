@@ -4,7 +4,7 @@ import os
 import sys
 from argparse import ArgumentParser
 from lib.core.virtual_host_scanner import *
-
+from lib.outputs.output_normal import *
 
 def print_banner():
     print("+-+-+-+-+-+-+-+-+-+  v. 0.2")
@@ -51,7 +51,9 @@ def main():
     print("\n[+] Most likely matches with a unique count of %s or less:" % arguments.unique_depth)
     for p in scanner.likely_matches(): print("  [>] %s" % p)
 
-    for p in scanner.hosts: print ("[!!!!] %s (%s)" % (p.hostname, p.response_code))
+    output = output_normal()
+    output.hosts = scanner.hosts
+    output.print_current()
 
 if __name__ == "__main__":
     main()
