@@ -7,7 +7,7 @@ from lib.core.virtual_host_scanner import *
 from lib.outputs.output_normal import *
 
 def print_banner():
-    print("+-+-+-+-+-+-+-+-+-+  v. 0.2")
+    print("+-+-+-+-+-+-+-+-+-+  v. 0.3")
     print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
     print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
 
