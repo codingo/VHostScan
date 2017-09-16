@@ -16,22 +16,24 @@ def main():
     print_banner()
     parser = ArgumentParser()
     parser.add_argument("-t",   dest="target_hosts", required=True, help="Set a target range of addresses to target. Ex 10.11.1.1-255" )
+    parser.add_argument("-w",   dest="wordlist", required=False, type=str, help="Set the wordlist to use (default ./wordlists/virtual-host-scanning.txt)", default="./wordlists/virtual-host-scanning.txt")
     parser.add_argument("-b",   dest="base_host", required=False, help="Set host to be used during substitution in wordlist (default to TARGET).", default=False)
-    parser.add_argument("-w",   dest="wordlist", required=False, type=str, help="Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt", default="./wordlists/virtual-host-scanning.txt")
     parser.add_argument("-p",   dest="port", required=False, help="Set the port to use (default 80).", default=80)
     parser.add_argument("-r",   dest="real_port", required=False, help="The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT).", default=False)
 
     parser.add_argument('--ignore-http-codes', dest='ignore_http_codes', type=str, help='Comma separated list of http codes to ignore with virtual host scans (default 404).', default='404')
-    parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount.', default=0)
+    parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount (default 0).', default=0)
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
-    parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP.", default=False)
+    parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP (default http).", default=False)
     arguments = parser.parse_args()
 
     if not os.path.exists(arguments.wordlist):
         print("[!] Wordlist %s doesn't exist, ending scan." % arguments.wordlistt)
         sys.exit()
 
-    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, str(arguments.port), arguments.wordlist))
+    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
+                                                                                   str(arguments.port), 
+                                                                                   arguments.wordlist))
     
     if(arguments.ssl):
         print("[>] SSL flag set, sending all results over HTTPS")
