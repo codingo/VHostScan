@@ -1,6 +1,19 @@
 # VHostScan
 A virtual host scanner that detects catch-all scenarios and attempts to work around dynamic default pages
 
-# Credit / Origins
+[![Python 3.2|3.6](https://img.shields.io/badge/python-3.2|3.6-green.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPL3-_red.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Twitter](https://img.shields.io/badge/twitter-@____timk-blue.svg)](https://twitter.com/__timk) [![Twitter](https://img.shields.io/badge/twitter-@codingo__-blue.svg)](https://twitter.com/codingo_)
 
-The original class for this project was taken from [Reconnoitre](https://github.com/codingo/Reconnoitre) which adapted virtual host discovery code from [teknogeek's virtual-host-scan](https://github.com/teknogeek/virtual-host-discovery-py).
+## Usage
+
+| Argument        | Description |
+| ------------- |:-------------|
+| -h, --help | Display help message and exit |
+| -t TARGET_HOSTS | Set the target host. |
+| -b BASE_HOST   | Set host to be used during substitution in wordlist (default to TARGET).|
+| -w WORDLIST | Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt |
+| -p PORT  | Set the port to use (default 80). |
+| -r REAL_PORT | The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT). |
+| --ignore-http-codes IGNORE_HTTP_CODES | Comma separated list of http codes to ignore with virtual host scans (default 404). |
+| --ignore-content-length IGNORE_CONTENT_LENGTH | Ignore content lengths of specificed amount. |
+| --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
+| --ssl | If set then connections will be made over HTTPS instead of HTTP. |

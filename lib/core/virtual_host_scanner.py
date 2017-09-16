@@ -17,10 +17,12 @@ class virtual_host_scanner(object):
         output: folder to write output file to
     """
      
-    def __init__(self, target, port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, 
+    def __init__(self, target, base_host, port=80, real_port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, 
                  wordlist="./wordlists/virtual-host-scanning.txt"):
         self.target = target
-        self.port = port
+        self.base_host = base_host
+        self.port = int(port)
+        self.real_port = int(real_port)
         self.ignore_http_codes = list(map(int, ignore_http_codes.replace(' ', '').split(',')))
         self.ignore_content_length = ignore_content_length
         self.wordlist = wordlist
@@ -34,11 +36,17 @@ class virtual_host_scanner(object):
     def scan(self):
         virtual_host_list = open(self.wordlist).read().splitlines()
 
+        if not self.base_host:
+            self.base_host = self.target
+
+        if not self.real_port:
+            self.real_port = self.port
+
         for virtual_host in virtual_host_list:
-            hostname = virtual_host.replace('%s', self.target)
+            hostname = virtual_host.replace('%s', self.base_host)
 
             headers = {
-                'Host': hostname if self.port == 80 else '{}:{}'.format(hostname, self.port),
+                'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
                 'Accept': '*/*'
             }
             
