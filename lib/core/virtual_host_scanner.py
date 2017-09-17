@@ -74,7 +74,6 @@ class virtual_host_scanner(object):
             page_hash = hashlib.sha256(res.text.encode('utf-8')).hexdigest()
             output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(hostname, res.status_code, 
                                                                                res.headers.get('content-length'), page_hash)
-            # temporary host class code
             host = discovered_host()
             host.hostname = hostname
             host.response_code = res.status_code
@@ -84,10 +83,10 @@ class virtual_host_scanner(object):
                 output += '  {}: {}\n'.format(key, val)
                 host.keys.append('{}: {}'.format(key, val))
 
+            self.hosts.append(host)
+            
             # print current results so feedback remains in "realtime"
             print(output)
-
-            self.hosts.append(host)
 
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
