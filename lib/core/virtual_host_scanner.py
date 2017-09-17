@@ -73,7 +73,7 @@ class virtual_host_scanner(object):
             # hash the page results to aid in identifing unique content
             page_hash = hashlib.sha256(res.text.encode('utf-8')).hexdigest()
             output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(hostname, res.status_code, 
-                                                                             res.headers.get('content-length'), page_hash)
+                                                                               res.headers.get('content-length'), page_hash)
             # temporary host class code
             host = discovered_host()
             host.hostname = hostname
@@ -82,7 +82,7 @@ class virtual_host_scanner(object):
 
             for key, val in res.headers.items():
                 output += '  {}: {}\n'.format(key, val)
-                host.keys.append('  {}: {}\n'.format(key, val))
+                host.keys.append('{}: {}'.format(key, val))
 
             # print current results so feedback remains in "realtime"
             print(output)

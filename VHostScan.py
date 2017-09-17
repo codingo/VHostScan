@@ -44,17 +44,13 @@ def main():
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
 
-    scanner = virtual_host_scanner(arguments.target_hosts, arguments.base_host, arguments.port, arguments.real_port, arguments.ssl, arguments.unique_depth, 
-                                   arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+    scanner = virtual_host_scanner(arguments.target_hosts, arguments.base_host, arguments.port, arguments.real_port, arguments.ssl, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
     
     scanner.scan()
 
-    print("\n[+] Most likely matches with a unique count of %s or less:" % arguments.unique_depth)
-    for p in scanner.likely_matches(): print("  [>] %s" % p)
-
-    output = output_helper()
-    output.hosts = scanner.hosts
-    output.print_current()
+    output = output_helper(scanner)
+    print(output.output_normal_detail())
+    print(output.output_normal_likely())
 
 if __name__ == "__main__":
     main()
