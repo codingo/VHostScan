@@ -7,3 +7,4 @@ class discovered_host(object):
         self.hostname = ''
         self.response_code = 0
         self.hash = ''
+        self.keys = []

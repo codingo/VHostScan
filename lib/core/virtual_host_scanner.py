@@ -4,6 +4,7 @@ import hashlib
 import pandas as pd
 from lib.core.discovered_host import *
 
+
 class virtual_host_scanner(object):
     """Virtual host scanning class
     
@@ -73,18 +74,19 @@ class virtual_host_scanner(object):
             page_hash = hashlib.sha256(res.text.encode('utf-8')).hexdigest()
             output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(hostname, res.status_code, 
                                                                              res.headers.get('content-length'), page_hash)
-
-            for key, val in res.headers.items():
-                output += '  {}: {}\n'.format(key, val)
-
-            # print current results so feedback remains in "realtime"
-            print(output)
-
             # temporary host class code
             host = discovered_host()
             host.hostname = hostname
             host.response_code = res.status_code
             host.hash = page_hash
+
+            for key, val in res.headers.items():
+                output += '  {}: {}\n'.format(key, val)
+                host.keys.append('  {}: {}\n'.format(key, val))
+
+            # print current results so feedback remains in "realtime"
+            print(output)
+
             self.hosts.append(host)
 
             # add url and hash into array for likely matches
