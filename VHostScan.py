@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount (default 0).', default=0)
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
     parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP (default http).", default=False)
+    parser.add_argument("-oN",   dest="output_normal", help="Normal output printed to a file when the -oN option is specified with a filename argument." )
     arguments = parser.parse_args()
 
     if not os.path.exists(arguments.wordlist):
@@ -47,10 +48,14 @@ def main():
     scanner = virtual_host_scanner(arguments.target_hosts, arguments.base_host, arguments.port, arguments.real_port, arguments.ssl, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
     
     scanner.scan()
-
     output = output_helper(scanner)
-    print(output.output_normal_detail())
+
     print(output.output_normal_likely())
+
+    if(arguments.output_normal):
+        output.write_normal(arguments.output_normal)
+        print("\n[+] Writing normal ouptut to %s" % arguments.output_normal)
+
 
 if __name__ == "__main__":
     main()
