@@ -17,3 +17,17 @@ A virtual host scanner that detects catch-all scenarios and attempts to work aro
 | --ignore-content-length IGNORE_CONTENT_LENGTH | Ignore content lengths of specificed amount. |
 | --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
+
+## Examples
+
+The most straightforward example runs the default wordlist against example.com using the default of port 80:
+
+```bash
+$ VHostScan.py -t example.com
+```
+
+Say you have an SSH port forward listening on port 4444 fowarding traffic to port 80 on example.com's development machine. You could use the following to make VHostScan connect through your SSH tunnel via localhost:4444 but format the header requests to suit connecting straight to port 80:
+
+```bash
+$ VHostScan.py -t localhost -b example.com -p 4444 -r 80
+```
