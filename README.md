@@ -3,6 +3,15 @@ A virtual host scanner that can pivot over hosts, detect catch-all scenarios, al
 
 [![Python 3.2|3.6](https://img.shields.io/badge/python-3.2|3.6-green.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPL3-_red.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Twitter](https://img.shields.io/badge/twitter-@____timk-blue.svg)](https://twitter.com/__timk) [![Twitter](https://img.shields.io/badge/twitter-@codingo__-blue.svg)](https://twitter.com/codingo_)
 
+## Key Benefits
+
+* Quickly highlight unqiue content in catch-all scenarios
+* Locate the outliers in catch-all scenarios where results have dynamic content on the page (such as the time)
+* Identify aliases by tweaking the unique depth of matches
+* Wordlist supports standard words and a variable to input a base hostname (for e.g. dev.%s from the wordlist would be run as dev.BASE_HOST)
+* Work over HTTP and HTTPS
+* Ability to set the real port of the webserver to use in headers when pivoting through ssh/nc
+
 ## Usage
 
 | Argument        | Description |
