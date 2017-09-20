@@ -111,6 +111,7 @@ ops
 oracle
 owa
 pbx
+portal
 s3
 secure
 secure.%s
