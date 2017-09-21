@@ -20,7 +20,7 @@ class virtual_host_scanner(object):
     """
      
     def __init__(self, target, base_host, port=80, real_port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, 
-                 wordlist="./wordlists/virtual-host-scanning.txt"):
+                 wordlist="./wordlists/virtual-host-scanning.txt", fuzzy_logic=False):
         self.target = target
         self.base_host = base_host
         self.port = int(port)
@@ -30,6 +30,7 @@ class virtual_host_scanner(object):
         self.wordlist = wordlist
         self.unique_depth = unique_depth
         self.ssl = ssl
+        self.fuzzy_logic = fuzzy_logic
 
         # this can be made redundant in future with better exceptions
         self.completed_scan=False
