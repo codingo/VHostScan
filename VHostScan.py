@@ -30,26 +30,28 @@ def main():
     parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
     
     arguments = parser.parse_args()    
-    wordlist = ""
+    wordlist = list()
     
-    if(arguments.stdin):
-        for line in sys.stdin:
-            wordlist += line
-            print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
-                                                                                          str(arguments.port)))
+    if(arguments.stdin and not arguments.wordlist):
+        input = list(line for line in sys.stdin.read().splitlines())
+        wordlist.extend(input)
+        print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
+                                                                                        str(arguments.port)))
     elif(arguments.stdin and arguments.wordlist):
         if not os.path.exists(arguments.wordlist):
             print("[!] Wordlist %s doesn't exist and can't be appended  to stdin." % arguments.wordlist)
             print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
                                                                                           str(arguments.port)))
         else:
-            wordlist += open(arguments.wordlist).read().splitlines()    
+            wordlist_file = open(arguments.wordlist).read().splitlines()
+            wordlist.extend(wordlist_file)    
             print("[+] Starting virtual host scan for %s using port %s, stdin data, and wordlist %s" % (arguments.target_hosts, 
                                                                                                         str(arguments.port), 
                                                                                                         arguments.wordlist))
     else:
         # if no stdin, or wordlist pass, open default wordlist location
-        wordlist = open("./wordlists/virtual-host-scanning.txt").read().splitlines()   
+        wordlist_file = open("./wordlists/virtual-host-scanning.txt").read().splitlines()
+        wordlist.extend(wordlist_file)   
         print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
                                                                                        str(arguments.port), 
                                                                                        "./wordlists/virtual-host-scanning.txt"))
