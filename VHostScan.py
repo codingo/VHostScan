@@ -37,15 +37,20 @@ def main():
             wordlist += line
     elif(arguments.stdin and arguments.wordlist):
         if not os.path.exists(arguments.wordlist):
-            print("[!] Wordlist %s doesn't exist and can't be appended  to stdin." % arguments.wordlistt)
+            print("[!] Wordlist %s doesn't exist and can't be appended  to stdin." % arguments.wordlist)
+            print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
+                                                                                          str(arguments.port)))
         else:
             wordlist += open(arguments.wordlist).read().splitlines()    
+            print("[+] Starting virtual host scan for %s using port %s, stdin data, and wordlist %s" % (arguments.target_hosts, 
+                                                                                                        str(arguments.port), 
+                                                                                                        arguments.wordlist))
     else:
+        # if no stdin, or wordlist pass, open default wordlist location
         wordlist = open("./wordlists/virtual-host-scanning.txt").read().splitlines()   
-
-    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
-                                                                                   str(arguments.port), 
-                                                                                   "placeholder"))
+        print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
+                                                                                       str(arguments.port), 
+                                                                                       "./wordlists/virtual-host-scanning.txt"))
     
     if(arguments.ssl):
         print("[>] SSL flag set, sending all results over HTTPS")
