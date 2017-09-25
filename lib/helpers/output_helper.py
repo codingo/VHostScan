@@ -15,10 +15,18 @@ class output_helper(object):
         file.write_file(self.generate_header() + self.output_normal_likely() + self.output_normal_detail())
 
     def output_normal_likely(self):
-        output = "\n[+] Most likely matches with a unique count of {} or less:".format(str(self.scanner.unique_depth))
-        for p in self.scanner.likely_matches(): output += "\n\t[>] {}".format(p)
-
-        return output
+        uniques = False
+        depth = str(self.scanner.unique_depth)
+        output = "\n[+] Most likely matches with a unique count of {} or less:".format(depth)
+        
+        for p in self.scanner.likely_matches(): 
+            output += "\n\t[>] {}".format(p)
+            uniques = True
+        
+        if(uniques):
+            return output
+        else:
+            return "\n[!] No matches with a unique count of {} or less.".format(depth)
 
     def output_normal_detail(self):
         output = "\n\n[+] Full scan results"
