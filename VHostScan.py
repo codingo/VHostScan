@@ -8,7 +8,7 @@ from lib.helpers.output_helper import *
 
 
 def print_banner():
-    print("+-+-+-+-+-+-+-+-+-+  v. 0.3")
+    print("+-+-+-+-+-+-+-+-+-+  v. 0.4")
     print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
     print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
 
@@ -27,11 +27,17 @@ def main():
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
     parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP (default http).", default=False)
     parser.add_argument("-oN",   dest="output_normal", help="Normal output printed to a file when the -oN option is specified with a filename argument." )
+    parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
     arguments = parser.parse_args()
 
     if not os.path.exists(arguments.wordlist):
         print("[!] Wordlist %s doesn't exist, ending scan." % arguments.wordlistt)
         sys.exit()
+
+    if(arguments.stdin):
+        for line in sys.stdin:
+            print("DEBUG (stdin): %s" % line)
+            return
 
     print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
                                                                                    str(arguments.port), 
