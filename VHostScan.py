@@ -39,7 +39,7 @@ def main():
         if not os.path.exists(arguments.wordlist):
             print("[!] Wordlist %s doesn't exist and can't be appended  to stdin." % arguments.wordlistt)
         else:
-            wordlist += open("./wordlists/virtual-host-scanning.txt").read().splitlines()    
+            wordlist += open(arguments.wordlist).read().splitlines()    
     else:
         wordlist = open("./wordlists/virtual-host-scanning.txt").read().splitlines()   
 
