@@ -47,12 +47,12 @@ $ VHostScan.py -t localhost -b example.com -p 4444 -r 80
 ```
 
 ### STDIN
-If you want to pipe information into VHostScan you can use the following:
+If you want to pipe information into VHostScan you can use the ```-``` flag:
 ```bash
-$ cat vhostname | VHostScan.py -t localhost
+$ cat vhostname | VHostScan.py -t localhost -
 ```
 ### STDIN and WordList
 You can still specify a wordlist to use along with stdin. In these cases wordlist information will be appended to stdin. For example:
 ```bash
-$ cat vhostname | VhostScan.py -t localhost -w ./wordlists/wordlist.txt
+$ cat vhostname | VhostScan.py -t localhost -w ./wordlists/wordlist.txt -
 ```
