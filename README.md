@@ -11,6 +11,7 @@ A virtual host scanner that can pivot over hosts, detect catch-all scenarios, al
 * Wordlist supports standard words and a variable to input a base hostname (for e.g. dev.%s from the wordlist would be run as dev.BASE_HOST)
 * Work over HTTP and HTTPS
 * Ability to set the real port of the webserver to use in headers when pivoting through ssh/nc
+* Add simple response headers to bypass some WAF products
 
 ## Usage
 
