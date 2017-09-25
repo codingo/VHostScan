@@ -33,15 +33,26 @@ A virtual host scanner that can pivot over hosts, detect catch-all scenarios, al
 ![VHOSTScan Feature Map](https://github.com/codingo/codingo.github.io/blob/master/assets/featureMap.PNG)
 
 ## Examples
-
+### Quick Example
 The most straightforward example runs the default wordlist against example.com using the default of port 80:
 
 ```bash
 $ VHostScan.py -t example.com
 ```
-
+### Port forwarding
 Say you have an SSH port forward listening on port 4444 fowarding traffic to port 80 on example.com's development machine. You could use the following to make VHostScan connect through your SSH tunnel via localhost:4444 but format the header requests to suit connecting straight to port 80:
 
 ```bash
 $ VHostScan.py -t localhost -b example.com -p 4444 -r 80
+```
+
+### STDIN
+If you want to pipe information into VHostScan you can use the following:
+```bash
+$ cat vhostname | VHostScan.py -t localhost
+```
+### STDIN and WordList
+You can still specify a wordlist to use along with stdin. In these cases wordlist information will be appended to stdin. For example:
+```bash
+$ cat vhostname | VhostScan.py -t localhost -w ./wordlists/wordlist.txt
 ```
