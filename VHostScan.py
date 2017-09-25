@@ -35,6 +35,8 @@ def main():
     if(arguments.stdin):
         for line in sys.stdin:
             wordlist += line
+            print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
+                                                                                          str(arguments.port)))
     elif(arguments.stdin and arguments.wordlist):
         if not os.path.exists(arguments.wordlist):
             print("[!] Wordlist %s doesn't exist and can't be appended  to stdin." % arguments.wordlist)
