@@ -19,7 +19,7 @@ class virtual_host_scanner(object):
         output: folder to write output file to
     """
      
-    def __init__(self, target, base_host, wordlist, port=80, real_port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0):
+    def __init__(self, target, base_host, wordlist, port=80, real_port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, add_waf_bypass_headers=False):
         self.target = target
         self.base_host = base_host
         self.port = int(port)
@@ -29,6 +29,7 @@ class virtual_host_scanner(object):
         self.wordlist = wordlist
         self.unique_depth = unique_depth
         self.ssl = ssl
+        self.add_waf_bypass_headers = add_waf_bypass_headers
 
         # this can be made redundant in future with better exceptions
         self.completed_scan=False
@@ -50,10 +51,20 @@ class virtual_host_scanner(object):
         for virtual_host in self.wordlist:
             hostname = virtual_host.replace('%s', self.base_host)
 
-            headers = {
-                'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
-                'Accept': '*/*'
-            }
+            if self.add_waf_bypass_headers:
+                headers = {
+                    'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
+                    'Accept': '*/*',
+                    'X-Originating-IP': '127.0.0.1',
+                    'X-Forwarded-For': '127.0.0.1',
+                    'X-Remote-IP': '127.0.0.1',
+                    'X-Remote-Addr': '127.0.0.1'
+                }
+            else:
+                headers = {
+                    'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
+                    'Accept': '*/*'
+                }
             
             dest_url = '{}://{}:{}/'.format('https' if self.ssl else 'http', self.target, self.port)
 
