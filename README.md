@@ -13,7 +13,11 @@ A virtual host scanner that can pivot over hosts, detect catch-all scenarios, al
 * Ability to set the real port of the webserver to use in headers when pivoting through ssh/nc
 * Add simple response headers to bypass some WAF products
 
-## Usage
+## Product Comparisons
+
+![VHOSTScan Feature Map](https://github.com/codingo/codingo.github.io/blob/master/assets/featureMap.PNG)
+
+# Usage
 
 | Argument        | Description |
 | ------------- |:-------------|
@@ -28,11 +32,7 @@ A virtual host scanner that can pivot over hosts, detect catch-all scenarios, al
 | --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
 
-## Product Comparisons
-
-![VHOSTScan Feature Map](https://github.com/codingo/codingo.github.io/blob/master/assets/featureMap.PNG)
-
-## Examples
+## Usage Examples
 ### Quick Example
 The most straightforward example runs the default wordlist against example.com using the default of port 80:
 
