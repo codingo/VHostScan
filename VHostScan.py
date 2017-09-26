@@ -5,10 +5,11 @@ import sys
 from argparse import ArgumentParser
 from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
+from lib.core.__version__ import __version__
 
 
 def print_banner():
-    print("+-+-+-+-+-+-+-+-+-+  v. 0.5")
+    print("+-+-+-+-+-+-+-+-+-+  v. %s" % __version__)
     print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
     print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
 
