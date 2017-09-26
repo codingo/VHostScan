@@ -8,7 +8,7 @@ from lib.helpers.output_helper import *
 
 
 def print_banner():
-    print("+-+-+-+-+-+-+-+-+-+  v. 0.3")
+    print("+-+-+-+-+-+-+-+-+-+  v. 0.4")
     print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
     print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
 
@@ -17,7 +17,7 @@ def main():
     print_banner()
     parser = ArgumentParser()
     parser.add_argument("-t",   dest="target_hosts", required=True, help="Set a target range of addresses to target. Ex 10.11.1.1-255" )
-    parser.add_argument("-w",   dest="wordlist", required=False, type=str, help="Set the wordlist to use (default ./wordlists/virtual-host-scanning.txt)", default="./wordlists/virtual-host-scanning.txt")
+    parser.add_argument("-w",   dest="wordlist", required=False, type=str, help="Set the wordlist to use (default ./wordlists/virtual-host-scanning.txt)")
     parser.add_argument("-b",   dest="base_host", required=False, help="Set host to be used during substitution in wordlist (default to TARGET).", default=False)
     parser.add_argument("-p",   dest="port", required=False, help="Set the port to use (default 80).", default=80)
     parser.add_argument("-r",   dest="real_port", required=False, help="The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT).", default=False)
@@ -27,15 +27,34 @@ def main():
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
     parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP (default http).", default=False)
     parser.add_argument("-oN",   dest="output_normal", help="Normal output printed to a file when the -oN option is specified with a filename argument." )
-    arguments = parser.parse_args()
-
-    if not os.path.exists(arguments.wordlist):
-        print("[!] Wordlist %s doesn't exist, ending scan." % arguments.wordlistt)
-        sys.exit()
-
-    print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
-                                                                                   str(arguments.port), 
-                                                                                   arguments.wordlist))
+    parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
+    
+    arguments = parser.parse_args()    
+    wordlist = list()
+    
+    if(arguments.stdin and not arguments.wordlist):
+        input = list(line for line in sys.stdin.read().splitlines())
+        wordlist.extend(input)
+        print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
+                                                                                        str(arguments.port)))
+    elif(arguments.stdin and arguments.wordlist):
+        if not os.path.exists(arguments.wordlist):
+            print("[!] Wordlist %s doesn't exist and can't be appended  to stdin." % arguments.wordlist)
+            print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
+                                                                                          str(arguments.port)))
+        else:
+            wordlist_file = open(arguments.wordlist).read().splitlines()
+            wordlist.extend(wordlist_file)    
+            print("[+] Starting virtual host scan for %s using port %s, stdin data, and wordlist %s" % (arguments.target_hosts, 
+                                                                                                        str(arguments.port), 
+                                                                                                        arguments.wordlist))
+    else:
+        # if no stdin, or wordlist pass, open default wordlist location
+        wordlist_file = open("./wordlists/virtual-host-scanning.txt").read().splitlines()
+        wordlist.extend(wordlist_file)   
+        print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % (arguments.target_hosts, 
+                                                                                       str(arguments.port), 
+                                                                                       "./wordlists/virtual-host-scanning.txt"))
     
     if(arguments.ssl):
         print("[>] SSL flag set, sending all results over HTTPS")
@@ -45,7 +64,8 @@ def main():
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
 
-    scanner = virtual_host_scanner(arguments.target_hosts, arguments.base_host, arguments.port, arguments.real_port, arguments.ssl, arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.wordlist)
+    scanner = virtual_host_scanner( arguments.target_hosts, arguments.base_host, wordlist, arguments.port, arguments.real_port, arguments.ssl, 
+                                    arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length)
     
     scanner.scan()
     output = output_helper(scanner)
