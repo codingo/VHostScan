@@ -5,7 +5,7 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 ## Key Benefits
 
-* Quickly highlight unqiue content in catch-all scenarios
+* Quickly highlight unique content in catch-all scenarios
 * Locate the outliers in catch-all scenarios where results have dynamic content on the page (such as the time)
 * Identify aliases by tweaking the unique depth of matches
 * Wordlist supports standard words and a variable to input a base hostname (for e.g. dev.%s from the wordlist would be run as dev.BASE_HOST)
