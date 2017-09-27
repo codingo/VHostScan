@@ -17,13 +17,6 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 ![VHOSTScan Feature Map](https://github.com/codingo/codingo.github.io/blob/master/assets/featureMap.PNG)
 
-## Screenshots
-### Using included wordlist for Virtual Host Checks
-![VHOSTScan Wordlist example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Example.png)
-
-### Using STDIN (pipe) to pass wordlist information for Virtual Host Checks
-![VHOSTScan STDIN Example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Pipe%20Example.png)
-
 # Usage
 
 | Argument        | Description |
@@ -40,12 +33,18 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
 
 ## Usage Examples
+
+___Note that a number of these examples reference 10.10.10.29. This IP refers to BANK.HTB, a retired target machine from HackTheBox (https://www.hackthebox.eu/).___
+
 ### Quick Example
 The most straightforward example runs the default wordlist against example.com using the default of port 80:
 
 ```bash
 $ VHostScan.py -t example.com
 ```
+
+![VHOSTScan Wordlist example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Example.png)
+
 ### Port forwarding
 Say you have an SSH port forward listening on port 4444 fowarding traffic to port 80 on example.com's development machine. You could use the following to make VHostScan connect through your SSH tunnel via localhost:4444 but format the header requests to suit connecting straight to port 80:
 
@@ -56,8 +55,11 @@ $ VHostScan.py -t localhost -b example.com -p 4444 -r 80
 ### STDIN
 If you want to pipe information into VHostScan you can use the ```-``` flag:
 ```bash
-$ cat vhostname | VHostScan.py -t localhost -
+$ cat bank.htb | VHostScan.py -t 10.10.10.29 -
 ```
+
+![VHOSTScan STDIN Example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Pipe%20Example.png)
+
 ### STDIN and WordList
 You can still specify a wordlist to use along with stdin. In these cases wordlist information will be appended to stdin. For example:
 ```bash
