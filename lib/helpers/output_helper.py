@@ -1,6 +1,10 @@
 from lib.core.discovered_host import *
 from lib.helpers.file_helper import *
 import time
+from fuzzywuzzy import fuzz
+import itertools
+import numpy as np
+
 
 class output_helper(object):
     def __init__(self, scanner):
@@ -30,17 +34,24 @@ class output_helper(object):
 
 
     def output_fuzzy(self):
-        output = "\n[+] Match similarity using fuzzy logic:".format(depth)
-
+        output = "\n[+] Match similarity using fuzzy logic:"
+        request_hashes = {}
+        
+        for host in self.scanner.hosts:
+            request_hashes[host.hash] = host.content
+        
+        for a, b in itertools.combinations(request_hashes.keys(), 2):
+            output += "\n\t[>] {} is {}% similar to {}".format(a, fuzz.ratio(request_hashes[a], request_hashes[b]), b)
+        
         return output
 
 
     def output_normal_detail(self):
         output = "\n\n[+] Full scan results"
 
-        for p in self.scanner.hosts: 
-            output += "\n\n{} (Code: {}) hash: {}".format(str(p.hostname), str(p.response_code), str(p.hash))
-            for key in p.keys: output += "\n\t{}".format(key)
+        for host in self.scanner.hosts: 
+            output += "\n\n{} (Code: {}) hash: {}".format(str(host.hostname), str(host.response_code), str(host.hash))
+            for key in host.keys: output += "\n\t{}".format(key)
         
         return output
 
