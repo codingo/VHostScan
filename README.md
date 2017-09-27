@@ -5,7 +5,7 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 ## Key Benefits
 
-* Quickly highlight unqiue content in catch-all scenarios
+* Quickly highlight unique content in catch-all scenarios
 * Locate the outliers in catch-all scenarios where results have dynamic content on the page (such as the time)
 * Identify aliases by tweaking the unique depth of matches
 * Wordlist supports standard words and a variable to input a base hostname (for e.g. dev.%s from the wordlist would be run as dev.BASE_HOST)
@@ -66,5 +66,5 @@ $ cat bank.htb | VHostScan.py -t 10.10.10.29 -
 ### STDIN and WordList
 You can still specify a wordlist to use along with stdin. In these cases wordlist information will be appended to stdin. For example:
 ```bash
-$ cat vhostname | VhostScan.py -t localhost -w ./wordlists/wordlist.txt -
+$ echo -e 'a.example.com\b.example.com' | VhostScan.py -t localhost -w ./wordlists/wordlist.txt -
 ```
