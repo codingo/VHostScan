@@ -24,17 +24,20 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 | -h, --help | Display help message and exit |
 | -t TARGET_HOSTS | Set the target host. |
 | -b BASE_HOST   | Set host to be used during substitution in wordlist (default to TARGET).|
-| -w WORDLIST | Set the wordlist to use for generated commands. Ex /usr/share/wordlist.txt |
+| -w WORDLIST | Set the wordlist to use (default ./wordlists/virtual-host-scanning.txt) |
 | -p PORT  | Set the port to use (default 80). |
 | -r REAL_PORT | The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT). |
 | --ignore-http-codes IGNORE_HTTP_CODES | Comma separated list of http codes to ignore with virtual host scans (default 404). |
 | --ignore-content-length IGNORE_CONTENT_LENGTH | Ignore content lengths of specificed amount. |
 | --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
+| --waf | If set then simple WAF bypass headers will be sent. |
+| -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
+| - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
 
 ## Usage Examples
 
-___Note that a number of these examples reference 10.10.10.29. This IP refers to BANK.HTB, a retired target machine from HackTheBox (https://www.hackthebox.eu/).___
+_Note that a number of these examples reference 10.10.10.29. This IP refers to BANK.HTB, a retired target machine from HackTheBox (https://www.hackthebox.eu/)._
 
 ### Quick Example
 The most straightforward example runs the default wordlist against example.com using the default of port 80:
