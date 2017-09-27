@@ -12,7 +12,7 @@ class output_helper(object):
 
         # todo: finish check_directory (needs regex to split out filename)
         # file.check_directory(filename)
-        file.write_file(self.generate_header() + self.output_normal_likely() + self.output_normal_detail())
+        file.write_file(self.generate_header() + self.output_normal_likely() + self.output_fuzzy() + self.output_normal_detail())
 
     def output_normal_likely(self):
         uniques = False
@@ -28,6 +28,13 @@ class output_helper(object):
         else:
             return "\n[!] No matches with a unique count of {} or less.".format(depth)
 
+
+    def output_fuzzy(self):
+        output = "\n[+] Match similarity using fuzzy logic:".format(depth)
+
+        return output
+
+
     def output_normal_detail(self):
         output = "\n\n[+] Full scan results"
 
@@ -36,6 +43,7 @@ class output_helper(object):
             for key in p.keys: output += "\n\t{}".format(key)
         
         return output
+
 
     def generate_header(self):
         output = "VHostScanner Log: {} {}\n".format(time.strftime("%d/%m/%Y"), time.strftime("%H:%M:%S"))

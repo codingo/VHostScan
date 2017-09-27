@@ -5,13 +5,13 @@ import hashlib
 import itertools
 from fuzzywuzzy import fuzz
 
-headers = ('a.example.com', 'b.example.com', 'c.example.com')
+headers = ('lol', 'intranet.example.com', 'dev.example.com')
 
 request_data = {}
 
 for host in headers:
     headers = { 'Host': host }
-    req = requests.get('http://test.host.here/', headers=headers, verify=False)
+    req = requests.get('http://home.kent.id.au', headers=headers, verify=False)
     hash = hashlib.sha256(req.text.encode('utf-8')).hexdigest()
     request_data[hash] = req.content
 

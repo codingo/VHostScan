@@ -3,6 +3,7 @@ import requests
 import hashlib
 import pandas as pd
 from lib.core.discovered_host import *
+from fuzzywuzzy import fuzz
 
 
 class virtual_host_scanner(object):
@@ -88,6 +89,7 @@ class virtual_host_scanner(object):
             host.hostname = hostname
             host.response_code = res.status_code
             host.hash = page_hash
+            host.content = res.content
 
             for key, val in res.headers.items():
                 output += '  {}: {}\n'.format(key, val)
@@ -120,3 +122,7 @@ class virtual_host_scanner(object):
         matches = ((segmented_data["key_col"].values).tolist())
 
         return matches
+
+    def fuzzy_logic(self):
+       # for host in self.hosts:
+       return
