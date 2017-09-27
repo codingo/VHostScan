@@ -8,3 +8,4 @@ class discovered_host(object):
         self.response_code = 0
         self.hash = ''
         self.keys = []
+        self.content = b''
