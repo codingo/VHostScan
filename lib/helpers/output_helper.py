@@ -7,8 +7,9 @@ import numpy as np
 
 
 class output_helper(object):
-    def __init__(self, scanner):
+    def __init__(self, scanner, arguments):
         self.scanner = scanner
+        self.arguments = arguments
 
     def write_normal(self, filename):
         
@@ -16,7 +17,16 @@ class output_helper(object):
 
         # todo: finish check_directory (needs regex to split out filename)
         # file.check_directory(filename)
-        file.write_file(self.generate_header() + self.output_normal_likely() + self.output_fuzzy() + self.output_normal_detail())
+
+        output = self.generate_header()
+        output += self.output_normal_likely()
+        
+        if(self.arguments.fuzzy_logic):
+            output += self.output_fuzzy()
+        
+        output += self.output_normal_detail()
+        
+        file.write_file(output)
 
     def output_normal_likely(self):
         uniques = False
@@ -34,7 +44,7 @@ class output_helper(object):
 
 
     def output_fuzzy(self):
-        output = "\n[+] Match similarity using fuzzy logic:"
+        output = "\n\n[+] Match similarity using fuzzy logic:"
         request_hashes = {}
         
         for host in self.scanner.hosts:

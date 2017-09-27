@@ -81,7 +81,7 @@ def main():
                                     arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.fuzzy_logic, arguments.add_waf_bypass_headers)
     
     scanner.scan()
-    output = output_helper(scanner)
+    output = output_helper(scanner, arguments)
 
     print(output.output_normal_likely())
 
