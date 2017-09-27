@@ -17,6 +17,13 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 ![VHOSTScan Feature Map](https://github.com/codingo/codingo.github.io/blob/master/assets/featureMap.PNG)
 
+## Screenshots
+### Using included wordlist for Virtual Host Checks
+![VHOSTScan Wordlist example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Example.png)
+
+### Using STDIN (pipe) to pass wordlist information for Virtual Host Checks
+![VHOSTScan STDIN Example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Pipe%20Example.png)
+
 # Usage
 
 | Argument        | Description |
