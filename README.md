@@ -17,6 +17,14 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 ![VHOSTScan Feature Map](https://github.com/codingo/codingo.github.io/blob/master/assets/featureMap.PNG)
 
+# Install Requirements
+
+Using pip install via:
+
+```bash
+$ pip install -r requirements.txt
+```
+
 # Usage
 
 | Argument        | Description |
