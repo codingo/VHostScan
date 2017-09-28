@@ -77,3 +77,7 @@ You can still specify a wordlist to use along with stdin. In these cases wordlis
 ```bash
 $ echo -e 'a.example.com\b.example.com' | VhostScan.py -t localhost -w ./wordlists/wordlist.txt -
 ```
+### Fuzzy Logic
+Here is an example with fuzzy logic enabled. You can see the last comparison is much more similar than the first two (it is comparing the content not the actual hashes):
+
+![VHOSTScan Fuzzy Logic Example](https://github.com/codingo/codingo.github.io/blob/master/assets/VHostScan-Fuzzy-Wuzzy.PNG)
