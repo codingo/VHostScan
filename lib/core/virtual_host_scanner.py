@@ -2,6 +2,7 @@ import os
 import requests
 import hashlib
 import pandas as pd
+import time
 from lib.core.discovered_host import *
 
 
@@ -20,7 +21,7 @@ class virtual_host_scanner(object):
         output: folder to write output file to
     """
      
-    def __init__(self, target, base_host, wordlist, port=80, real_port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, fuzzy_logic=False, add_waf_bypass_headers=False):
+    def __init__(self, target, base_host, wordlist, port=80, real_port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, fuzzy_logic=False, rate_limit=0, add_waf_bypass_headers=False):
         self.target = target
         self.base_host = base_host
         self.port = int(port)
@@ -31,6 +32,7 @@ class virtual_host_scanner(object):
         self.unique_depth = unique_depth
         self.ssl = ssl
         self.fuzzy_logic = fuzzy_logic
+		self.rate_limit = rate_limit
         self.add_waf_bypass_headers = add_waf_bypass_headers
 
         # this can be made redundant in future with better exceptions
@@ -104,6 +106,9 @@ class virtual_host_scanner(object):
 
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
+			
+			#rate limit the connection, if the int is 0 it is ignored
+			time.sleep(self.rate_limit)
 
         self.completed_scan=True
 
