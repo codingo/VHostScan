@@ -39,6 +39,7 @@ $ pip install -r requirements.txt
 | --ignore-content-length IGNORE_CONTENT_LENGTH | Ignore content lengths of specificed amount. |
 | --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
+| --fuzzy-logic | If set then all unique content replies are compared and a similarity ratio is given for each pair. |
 | --waf | If set then simple WAF bypass headers will be sent. |
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
 | - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
