@@ -22,6 +22,7 @@ def main():
     parser.add_argument("-b",   dest="base_host", required=False, help="Set host to be used during substitution in wordlist (default to TARGET).", default=False)
     parser.add_argument("-p",   dest="port", required=False, help="Set the port to use (default 80).", default=80)
     parser.add_argument("-r",   dest="real_port", required=False, help="The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT).", default=False)
+    parser.add_argument("-rl", dest="ratelimit", required=False, help="Set ratelimit per second. Ex 5 per second, default = 1")
 
     parser.add_argument('--ignore-http-codes', dest='ignore_http_codes', type=str, help='Comma separated list of http codes to ignore with virtual host scans (default 404).', default='404')
     parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount (default 0).', default=0)
@@ -77,7 +78,7 @@ def main():
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
 
-    scanner = virtual_host_scanner( arguments.target_hosts, arguments.base_host, wordlist, arguments.port, arguments.real_port, arguments.ssl, 
+    scanner = virtual_host_scanner( arguments.target_hosts, arguments.base_host, wordlist, arguments.port, arguments.real_port, arguments.ssl, arguments.ratelimit,
                                     arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.fuzzy_logic, arguments.add_waf_bypass_headers)
     
     scanner.scan()
