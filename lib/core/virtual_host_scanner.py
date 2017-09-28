@@ -55,6 +55,7 @@ class virtual_host_scanner(object):
 
             if self.add_waf_bypass_headers:
                 headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
                     'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
                     'Accept': '*/*',
                     'X-Originating-IP': '127.0.0.1',
@@ -64,6 +65,7 @@ class virtual_host_scanner(object):
                 }
             else:
                 headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
                     'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
                     'Accept': '*/*'
                 }
