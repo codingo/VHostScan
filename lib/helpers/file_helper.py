@@ -26,3 +26,32 @@ class file_helper(object):
     def write_file(self, contents):
         with open(self.output_file, "w") as o:
             o.write(contents)
+
+
+def parse_word_list_argument(argument):
+    if not argument:
+        return []
+
+    if ',' in argument:
+        files = [arg.strip() for arg in argument.split(',')]
+    else:
+        files = [argument.strip()]
+
+    return [
+        path for path in files
+        if os.path.exists(path)
+    ]
+
+
+def get_combined_word_lists(argument):
+    files = parse_word_list_argument(argument)
+    words = []
+
+    for path in files:
+        with open(path) as f:
+            words.extend(f.read().splitlines())
+
+    return {
+        'file_paths': files,
+        'words': words,
+    }
