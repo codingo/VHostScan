@@ -77,8 +77,9 @@ def main():
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
 
-    scanner = virtual_host_scanner( arguments.target_hosts, arguments.base_host, wordlist, arguments.port, arguments.real_port, arguments.ssl, 
-                                    arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.fuzzy_logic, arguments.add_waf_bypass_headers)
+    scanner_args = vars(arguments)
+    scanner_args.update({'target': arguments.target_hosts, 'wordlist': wordlist})
+    scanner = virtual_host_scanner(**scanner_args)
     
     scanner.scan()
     output = output_helper(scanner, arguments)
