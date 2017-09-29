@@ -21,19 +21,23 @@ class virtual_host_scanner(object):
         output: folder to write output file to
     """
      
-    def __init__(self, target, base_host, wordlist, port=80, real_port=80, ssl=False, unique_depth=1, ignore_http_codes='404', ignore_content_length=0, fuzzy_logic=False, rate_limit=0, add_waf_bypass_headers=False):
+    def __init__(self, target, wordlist, **kwargs):
         self.target = target
-        self.base_host = base_host
-        self.port = int(port)
-        self.real_port = int(real_port)
-        self.ignore_http_codes = list(map(int, ignore_http_codes.replace(' ', '').split(',')))
-        self.ignore_content_length = ignore_content_length
         self.wordlist = wordlist
         self.unique_depth = unique_depth
         self.ssl = ssl
         self.fuzzy_logic = fuzzy_logic
-		self.rate_limit = rate_limit
+		    self.rate_limit = rate_limit
         self.add_waf_bypass_headers = add_waf_bypass_headers
+        self.base_host = kwargs.get('base_host')
+        self.port = int(kwargs.get('port', 80))
+        self.real_port = int(kwargs.get('real_port', 80))
+        self.ignore_content_length = int(kwargs.get('ignore_content_length', 0))
+        self.ssl = kwargs.get('ssl', False)
+        self.fuzzy_logic = kwargs.get('fuzzy_logic', False)
+        self.add_waf_bypass_headers = kwargs.get('add_waf_bypass_headers', False)
+        self.unique_depth = int(kwargs.get('unique_depth', 1))
+        self.ignore_http_codes = kwargs.get('ignore_http_codes', '404')
 
         # this can be made redundant in future with better exceptions
         self.completed_scan=False
@@ -44,6 +48,13 @@ class virtual_host_scanner(object):
         # store associated data for discovered hosts in array for oN, oJ, etc'
         self.hosts = []
 
+    @property
+    def ignore_http_codes(self):
+        return self._ignore_http_codes
+
+    @ignore_http_codes.setter
+    def ignore_http_codes(self, codes):
+        self._ignore_http_codes = [int(code) for code in codes.replace(' ', '').split(',')]
 
     def scan(self):
         if not self.base_host:
