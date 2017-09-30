@@ -27,7 +27,7 @@ class virtual_host_scanner(object):
         self.unique_depth = unique_depth
         self.ssl = ssl
         self.fuzzy_logic = fuzzy_logic
-		    self.rate_limit = rate_limit
+	self.rate_limit = rate_limit
         self.add_waf_bypass_headers = add_waf_bypass_headers
         self.base_host = kwargs.get('base_host')
         self.port = int(kwargs.get('port', 80))
@@ -118,8 +118,8 @@ class virtual_host_scanner(object):
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
 			
-			#rate limit the connection, if the int is 0 it is ignored
-			time.sleep(self.rate_limit)
+	    #rate limit the connection, if the int is 0 it is ignored
+	    time.sleep(self.rate_limit)
 
         self.completed_scan=True
 
