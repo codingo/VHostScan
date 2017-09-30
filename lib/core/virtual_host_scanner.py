@@ -6,7 +6,6 @@ import time
 from lib.core.discovered_host import *
 
 
-
 class virtual_host_scanner(object):
     """Virtual host scanning class
     
@@ -20,16 +19,13 @@ class virtual_host_scanner(object):
         ignore_content_length: integer value of content length to ignore
         output: folder to write output file to
     """
-     
+
+
     def __init__(self, target, wordlist, **kwargs):
         self.target = target
         self.wordlist = wordlist
-        self.unique_depth = unique_depth
-        self.ssl = ssl
-        self.fuzzy_logic = fuzzy_logic
-	self.rate_limit = rate_limit
-        self.add_waf_bypass_headers = add_waf_bypass_headers
         self.base_host = kwargs.get('base_host')
+        self.rate_limit = int(kwargs.get('rate_limit', 0))
         self.port = int(kwargs.get('port', 80))
         self.real_port = int(kwargs.get('real_port', 80))
         self.ignore_content_length = int(kwargs.get('ignore_content_length', 0))
@@ -55,6 +51,7 @@ class virtual_host_scanner(object):
     @ignore_http_codes.setter
     def ignore_http_codes(self, codes):
         self._ignore_http_codes = [int(code) for code in codes.replace(' ', '').split(',')]
+
 
     def scan(self):
         if not self.base_host:
@@ -117,7 +114,7 @@ class virtual_host_scanner(object):
 
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
-			
+            
 	    #rate limit the connection, if the int is 0 it is ignored
 	    time.sleep(self.rate_limit)
 
