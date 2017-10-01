@@ -3,6 +3,8 @@
 import os
 import sys
 from argparse import ArgumentParser
+from dns.resolver import Resolver
+from socket import gethostbyaddr
 from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
 from lib.core.__version__ import __version__
@@ -77,6 +79,12 @@ def main():
     
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
+
+    for ip in Resolver().query(arguments.target_hosts, 'A'):
+        host, aliases, ips = gethostbyaddr(str(ip))
+        wordlist.append(str(ip))
+        wordlist.append(host)
+        wordlist.extend(aliases)
 
     scanner_args = vars(arguments)
     scanner_args.update({'target': arguments.target_hosts, 'wordlist': wordlist})
