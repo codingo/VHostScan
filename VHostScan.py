@@ -7,6 +7,7 @@ from dns.resolver import Resolver
 from socket import gethostbyaddr
 from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
+from lib.helpers.file_helper import get_combined_word_lists
 from lib.core.__version__ import __version__
 
 
@@ -20,7 +21,7 @@ def main():
     print_banner()
     parser = ArgumentParser()
     parser.add_argument("-t",   dest="target_hosts", required=True, help="Set a target range of addresses to target. Ex 10.11.1.1-255" )
-    parser.add_argument("-w",   dest="wordlist", required=False, type=str, help="Set the wordlist to use (default ./wordlists/virtual-host-scanning.txt)", default=False)
+    parser.add_argument("-w",   dest="wordlists", required=False, type=str, help="Set the wordlists to use (default ./wordlists/virtual-host-scanning.txt)", default=False)
     parser.add_argument("-b",   dest="base_host", required=False, help="Set host to be used during substitution in wordlist (default to TARGET).", default=False)
     parser.add_argument("-p",   dest="port", required=False, help="Set the port to use (default 80).", default=80)
     parser.add_argument("-r",   dest="real_port", required=False, help="The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT).", default=False)
@@ -37,39 +38,32 @@ def main():
     parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
 
     arguments = parser.parse_args()    
-    wordlist = list()
-    
-    if(arguments.stdin and not arguments.wordlist):
+    wordlist = []
+
+    word_list_types = []
+
+    default_wordlist = "./wordlists/virtual-host-scanning.txt" if not arguments.stdin else None
+
+    if arguments.stdin:
+        word_list_types.append('stdin')
         wordlist.extend(list(line for line in sys.stdin.read().splitlines()))
-        print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
-                                                                                        str(arguments.port)))
-    elif(arguments.stdin and arguments.wordlist):
-        if not os.path.exists(arguments.wordlist):
-            wordlist.extend(list(line for line in sys.stdin.read().splitlines()))
-            print("[!] Wordlist %s doesn't exist and can't be appended  to stdin." % arguments.wordlist)
-            print("[+] Starting virtual host scan for %s using port %s and stdin data" % (arguments.target_hosts, 
-                                                                                          str(arguments.port)))
-        else:
-            wordlist.extend(list(line for line in open(arguments.wordlist).read().splitlines()))
-            print("[+] Starting virtual host scan for %s using port %s, stdin data, and wordlist %s" % (arguments.target_hosts, 
-                                                                                                        str(arguments.port), 
-                                                                                                        arguments.wordlist))
-    else:
-        if not arguments.wordlist:
-            wordlist.extend(list(line for line in open("./wordlists/virtual-host-scanning.txt").read().splitlines()))
-            print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % ( arguments.target_hosts, 
-                                                                                            str(arguments.port), 
-                                                                                            "./wordlists/virtual-host-scanning.txt"))
-        else:
-            if not os.path.exists(arguments.wordlist):
-                print("[!] Wordlist %s doesn't exist, unable to scan." % arguments.wordlist)
-                sys.exit()
-            else:
-                wordlist.extend(list(line for line in open(arguments.wordlist).read().splitlines()))
-                print("[+] Starting virtual host scan for %s using port %s and wordlist %s" % ( arguments.target_hosts, 
-                                                                                                str(arguments.port), 
-                                                                                                str(arguments.wordlist)))
-        
+
+    combined = get_combined_word_lists(arguments.wordlists or default_wordlist)
+    word_list_types.append('wordlists: {}'.format(
+        ', '.join(combined['file_paths']),
+    ))
+    wordlist.extend(combined['words'])
+
+    if len(wordlist) == 0:
+        print("[!] No words found in provided wordlists, unable to scan.")
+        sys.exit(1)
+
+    print("[+] Starting virtual host scan for {host} using port {port} and {inputs}".format(
+        host=arguments.target_hosts,
+        port=arguments.port,
+        inputs=', '.join(word_list_types),
+    ))
+
     if(arguments.ssl):
         print("[>] SSL flag set, sending all results over HTTPS")
 
