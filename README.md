@@ -33,7 +33,7 @@ $ pip install -r requirements.txt
 | -h, --help | Display help message and exit |
 | -t TARGET_HOSTS | Set the target host. |
 | -b BASE_HOST   | Set host to be used during substitution in wordlist (default to TARGET).|
-| -w WORDLIST | Set the wordlist to use (default ./wordlists/virtual-host-scanning.txt) |
+| -w WORDLISTS | Set the wordlist(s) to use. You may specify multiple wordlists in comma delimited format (e.g. -w "./wordlists/simple.txt, ./wordlists/hackthebox.txt" (default ./wordlists/virtual-host-scanning.txt). |
 | -p PORT  | Set the port to use (default 80). |
 | -r REAL_PORT | The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT). |
 | --ignore-http-codes IGNORE_HTTP_CODES | Comma separated list of http codes to ignore with virtual host scans (default 404). |
