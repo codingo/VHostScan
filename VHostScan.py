@@ -33,11 +33,11 @@ def main():
     parser.add_argument("--fuzzy-logic", dest="fuzzy_logic", action="store_true", help="If set then fuzzy match will be performed against unique hosts (default off).", default=False)
     parser.add_argument("--no-lookups", dest="no_lookup", action="store_true", help="Disable reverse lookups (identifies new targets and appends to wordlist, on by default).", default=False)
     parser.add_argument("--rate-limit", dest="rate_limit", type=int, help='Amount of time in seconds to delay between each scan (default 0).', default=0)
+    parser.add_argument('--random-agent', dest='random_agent', action='store_true', help='If set, then each scan will use random user-agent from predefined list.', default=False)
+    parser.add_argument('--user-agent', dest='user_agent', type=str, help='Specify a user-agent to use for scans')
     parser.add_argument("--waf", dest="add_waf_bypass_headers",   action="store_true", help="If set then simple WAF bypass headers will be sent.", default=False)
     parser.add_argument("-oN",   dest="output_normal", help="Normal output printed to a file when the -oN option is specified with a filename argument." )
     parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
-    parser.add_argument('--random-agent', dest='random_agent', action='store_true', help='If set, then each scan will use random user-agent from predefined list', default=False)
-    parser.add_argument('--user-agent', dest='user_agent', type=str, help='User-agent for scans')
 
     arguments = parser.parse_args()    
     wordlist = []

@@ -43,6 +43,8 @@ $ pip install -r requirements.txt
 | --fuzzy-logic | If set then all unique content replies are compared and a similarity ratio is given for each pair. This helps to isolate vhosts in situations where a default page isn't static (such as having the time on it). |
 | --no-lookups | Disbale reverse lookups (identifies new targets and append to wordlist, on by default). | 
 | --rate-limit | Amount of time in seconds to delay between each scan (default 0). |
+| --random-agent | If set, each scan will use a random user-agent from a predefined list. |
+| --user-agent | Specify a user agent to use for scans. |
 | --waf | If set then simple WAF bypass headers will be sent. |
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
 | - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
