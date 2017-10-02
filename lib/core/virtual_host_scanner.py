@@ -49,7 +49,7 @@ class virtual_host_scanner(object):
         self.hosts = []
 
         # available user-agents
-        self.user_agents = list(kwargs.get('user_agents', [DEFAULT_USER_AGENT]))
+        self.user_agents = list(kwargs.get('user_agents')) or [DEFAULT_USER_AGENT]
 
     @property
     def ignore_http_codes(self):
