@@ -7,7 +7,7 @@ from dns.resolver import Resolver
 from socket import gethostbyaddr
 from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
-from lib.helpers.file_helper import get_combined_word_lists
+from lib.helpers.file_helper import get_combined_word_lists, load_random_user_agents
 from lib.core.__version__ import __version__
 
 
@@ -36,6 +36,8 @@ def main():
     parser.add_argument("--waf", dest="add_waf_bypass_headers",   action="store_true", help="If set then simple WAF bypass headers will be sent.", default=False)
     parser.add_argument("-oN",   dest="output_normal", help="Normal output printed to a file when the -oN option is specified with a filename argument." )
     parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
+    parser.add_argument('--random-agent', dest='random_agent', action='store_true', help='If set, then each scan will use random user-agent from predefined list', default=False)
+    parser.add_argument('--user-agent', dest='user_agent', type=str, help='User-agent for scans')
 
     arguments = parser.parse_args()    
     wordlist = []
@@ -64,6 +66,14 @@ def main():
         inputs=', '.join(word_list_types),
     ))
 
+    user_agents = []
+    if arguments.user_agent:
+        print('[>] User-Agent specified, using it')
+        user_agents = [arguments.user_agent]
+    elif arguments.random_agent:
+        print('[>] Random User-Agent flag set')
+        user_agents = load_random_user_agents()
+
     if(arguments.ssl):
         print("[>] SSL flag set, sending all results over HTTPS")
 
@@ -83,7 +93,7 @@ def main():
             wordlist.extend(aliases)
 
     scanner_args = vars(arguments)
-    scanner_args.update({'target': arguments.target_hosts, 'wordlist': wordlist})
+    scanner_args.update({'target': arguments.target_hosts, 'wordlist': wordlist, 'user_agents': user_agents})
     scanner = virtual_host_scanner(**scanner_args)
     
     scanner.scan()
