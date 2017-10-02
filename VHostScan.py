@@ -3,6 +3,8 @@
 import os
 import sys
 from argparse import ArgumentParser
+from dns.resolver import Resolver
+from socket import gethostbyaddr
 from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
 from lib.helpers.file_helper import get_combined_word_lists
@@ -29,10 +31,12 @@ def main():
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
     parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP (default http).", default=False)
     parser.add_argument("--fuzzy-logic", dest="fuzzy_logic", action="store_true", help="If set then fuzzy match will be performed against unique hosts (default off).", default=False)
+    parser.add_argument("--no-lookups", dest="no_lookup", action="store_true", help="Disable reverse lookups (identifies new targets and appends to wordlist, on by default).", default=False)
+    parser.add_argument("--rate-limit", dest="rate_limit", type=int, help='Amount of time in seconds to delay between each scan (default 0).', default=0)
     parser.add_argument("--waf", dest="add_waf_bypass_headers",   action="store_true", help="If set then simple WAF bypass headers will be sent.", default=False)
     parser.add_argument("-oN",   dest="output_normal", help="Normal output printed to a file when the -oN option is specified with a filename argument." )
     parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
-    
+
     arguments = parser.parse_args()    
     wordlist = []
 
@@ -71,8 +75,16 @@ def main():
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
 
-    scanner = virtual_host_scanner( arguments.target_hosts, arguments.base_host, wordlist, arguments.port, arguments.real_port, arguments.ssl, 
-                                    arguments.unique_depth, arguments.ignore_http_codes, arguments.ignore_content_length, arguments.fuzzy_logic, arguments.add_waf_bypass_headers)
+    if not arguments.no_lookup:
+        for ip in Resolver().query(arguments.target_hosts, 'A'):
+            host, aliases, ips = gethostbyaddr(str(ip))
+            wordlist.append(str(ip))
+            wordlist.append(host)
+            wordlist.extend(aliases)
+
+    scanner_args = vars(arguments)
+    scanner_args.update({'target': arguments.target_hosts, 'wordlist': wordlist})
+    scanner = virtual_host_scanner(**scanner_args)
     
     scanner.scan()
     output = output_helper(scanner, arguments)

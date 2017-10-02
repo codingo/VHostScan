@@ -12,6 +12,7 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 * Work over HTTP and HTTPS
 * Ability to set the real port of the webserver to use in headers when pivoting through ssh/nc
 * Add simple response headers to bypass some WAF products
+* Identify new targets by using reverse lookups and append to wordlist
 
 ## Product Comparisons
 
@@ -40,6 +41,8 @@ $ pip install -r requirements.txt
 | --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
 | --fuzzy-logic | If set then all unique content replies are compared and a similarity ratio is given for each pair. This helps to isolate vhosts in situations where a default page isn't static (such as having the time on it). |
+| --no-lookups | Disbale reverse lookups (identifies new targets and append to wordlist, on by default). | 
+| --rate-limit | Amount of time in seconds to delay between each scan (default 0). |
 | --waf | If set then simple WAF bypass headers will be sent. |
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
 | - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
