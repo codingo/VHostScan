@@ -1,9 +1,13 @@
 import os
+import random
+
 import requests
 import hashlib
 import pandas as pd
 import time
 from lib.core.discovered_host import *
+
+DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
 
 
 class virtual_host_scanner(object):
@@ -44,6 +48,9 @@ class virtual_host_scanner(object):
         # store associated data for discovered hosts in array for oN, oJ, etc'
         self.hosts = []
 
+        # available user-agents
+        self.user_agents = list(kwargs.get('user_agents')) or [DEFAULT_USER_AGENT]
+
     @property
     def ignore_http_codes(self):
         return self._ignore_http_codes
@@ -63,22 +70,19 @@ class virtual_host_scanner(object):
         for virtual_host in self.wordlist:
             hostname = virtual_host.replace('%s', self.base_host)
 
+            headers = {
+                'User-Agent': random.choice(self.user_agents),
+                'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
+                'Accept': '*/*'
+            }
+
             if self.add_waf_bypass_headers:
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-                    'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
-                    'Accept': '*/*',
+                headers.update({
                     'X-Originating-IP': '127.0.0.1',
                     'X-Forwarded-For': '127.0.0.1',
                     'X-Remote-IP': '127.0.0.1',
                     'X-Remote-Addr': '127.0.0.1'
-                }
-            else:
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-                    'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
-                    'Accept': '*/*'
-                }
+                })
             
             dest_url = '{}://{}:{}/'.format('https' if self.ssl else 'http', self.target, self.port)
 
@@ -115,8 +119,8 @@ class virtual_host_scanner(object):
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
             
-	    #rate limit the connection, if the int is 0 it is ignored
-	    time.sleep(self.rate_limit)
+        #rate limit the connection, if the int is 0 it is ignored
+        time.sleep(self.rate_limit)
 
         self.completed_scan=True
 

@@ -55,3 +55,8 @@ def get_combined_word_lists(argument):
         'file_paths': files,
         'words': words,
     }
+
+
+def load_random_user_agents():
+    with open('./lib/ua-random-list.txt') as f:
+        return f.readlines()
