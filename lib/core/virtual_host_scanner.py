@@ -115,8 +115,8 @@ class virtual_host_scanner(object):
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
             
-	    #rate limit the connection, if the int is 0 it is ignored
-	    time.sleep(self.rate_limit)
+        #rate limit the connection, if the int is 0 it is ignored
+        time.sleep(self.rate_limit)
 
         self.completed_scan=True
 
