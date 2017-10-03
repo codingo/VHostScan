@@ -34,6 +34,7 @@ def main():
     parser.add_argument("--rate-limit", dest="rate_limit", type=int, help='Amount of time in seconds to delay between each scan (default 0).', default=0)
     parser.add_argument("--waf", dest="add_waf_bypass_headers",   action="store_true", help="If set then simple WAF bypass headers will be sent.", default=False)
     parser.add_argument("-oN",   dest="output_normal", help="Normal output printed to a file when the -oN option is specified with a filename argument." )
+    parser.add_argument("-oJ", dest="output_json", help="JSON output printed to a file when the -oJ option is specified with a filename argument." )
     parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
 
     arguments = parser.parse_args()    
@@ -103,6 +104,10 @@ def main():
     if(arguments.output_normal):
         output.write_normal(arguments.output_normal)
         print("\n[+] Writing normal ouptut to %s" % arguments.output_normal)
+
+    if(arguments.output_json):
+        output.output_json(arguments.output_json)
+        print("\n[+] Writing json ouptut to %s" % arguments.output_json)
 
 
 if __name__ == "__main__":

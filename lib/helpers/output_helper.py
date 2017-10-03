@@ -4,6 +4,7 @@ import time
 from fuzzywuzzy import fuzz
 import itertools
 import numpy as np
+import json
 
 
 class output_helper(object):
@@ -41,6 +42,21 @@ class output_helper(object):
             return output
         else:
             return "\n[!] No matches with a unique count of {} or less.".format(depth)
+
+
+    def output_json(self, filename):
+        file = file_helper(filename)
+        list = dict()
+        for host in self.scanner.hosts:
+            headers = {}
+            for header in host.keys:
+                headers[header.split(':')[0]] = header.split(':')[1].strip()
+
+            list[host.hostname] = {'Code': host.response_code,
+                                   'Hash': host.hash,
+                                   'Response': host.content,
+                                   'Headers': headers}
+        file.write_file(json.dumps(list))
 
 
     def output_fuzzy(self):
