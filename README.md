@@ -45,6 +45,7 @@ $ pip install -r requirements.txt
 | --rate-limit | Amount of time in seconds to delay between each scan (default 0). |
 | --waf | If set then simple WAF bypass headers will be sent. |
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
+| -oJ OUTPUT_JSON | JSON output printed to a file when the -oJ option is specified with a filename argument. |
 | - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
 
 ## Usage Examples
