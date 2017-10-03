@@ -116,7 +116,7 @@ class virtual_host_scanner(object):
             self.results.append(hostname + ',' + page_hash)
             
 	    #rate limit the connection, if the int is 0 it is ignored
-	    time.sleep(self.rate_limit)
+            time.sleep(self.rate_limit)
 
         self.completed_scan=True
 
