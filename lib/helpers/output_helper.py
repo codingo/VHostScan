@@ -54,7 +54,6 @@ class output_helper(object):
 
             list[host.hostname] = {'Code': host.response_code,
                                    'Hash': host.hash,
-                                   'Response': host.content,
                                    'Headers': headers}
         file.write_file(json.dumps(list))
 
