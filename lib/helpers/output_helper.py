@@ -46,16 +46,28 @@ class output_helper(object):
 
     def output_json(self, filename):
         file = file_helper(filename)
-        list = dict()
+        output = dict()
+        output['Start Time'] = '{} {}'.format(time.strftime("%d/%m/%Y"), time.strftime("%H:%M:%S"))
+        output['Target'] = self.scanner.target
+        output['Base Host'] = self.scanner.base_host
+        output['Port'] = self.scanner.port
+        output['Real Port'] = self.scanner.real_port
+        output['Ignore HTTP Codes'] = self.scanner.ignore_http_codes
+        output['Ignore Content Length'] = self.scanner.ignore_content_length
+        output['Wordlist'] = self.scanner.wordlist
+        output['Unique Depth'] = self.scanner.unique_depth
+        output['SSL'] = self.scanner.ssl
+        result = dict()
         for host in self.scanner.hosts:
-            headers = {}
+            headers = dict()
             for header in host.keys:
                 headers[header.split(':')[0]] = header.split(':')[1].strip()
 
-            list[host.hostname] = {'Code': host.response_code,
+            result[host.hostname] = {'Code': host.response_code,
                                    'Hash': host.hash,
                                    'Headers': headers}
-        file.write_file(json.dumps(list))
+        output['Result'] = result
+        file.write_file(json.dumps(output))
 
 
     def output_fuzzy(self):
