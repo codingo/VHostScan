@@ -7,12 +7,13 @@ class file_helper(object):
         self.output_file = output_file
 
     def check_directory(self):
-        directory = self.output_file
+        directory = os.path.dirname(self.output_file)
+        
         try:
-            os.stat(self.directory)
+            os.stat(directory)
         except:
-            os.mkdir(self.directory)
-            print("[!] %s didn't exist and has been created." % output_directory)
+            os.mkdir(directory)
+            print("[!] %s didn't exist and has been created." % directory)
 
     # placeholder for error checking on -oJ implementation
     def is_json(json_file):
@@ -24,6 +25,9 @@ class file_helper(object):
         return True
 
     def write_file(self, contents):
+        # check if host directory exists, if not create it
+        self.check_directory()
+        
         with open(self.output_file, "w") as o:
             o.write(contents)
 
