@@ -87,3 +87,14 @@ $ echo -e 'a.example.com\b.example.com' | VhostScan.py -t localhost -w ./wordlis
 Here is an example with fuzzy logic enabled. You can see the last comparison is much more similar than the first two (it is comparing the content not the actual hashes):
 
 ![VHOSTScan Fuzzy Logic Example](https://github.com/codingo/codingo.github.io/blob/master/assets/VHostScan-Fuzzy-Wuzzy.PNG)
+
+## Running the tests
+
+The project includes a small battery of tests. It's really simple to run the tests:
+
+```bash
+pip install -r test-requirements.txt
+pytest
+```
+
+If you're thinking of adding a new feature to the project, consider also contributing with a couple of tests. A well-tested codebase is a sane codebase. :)

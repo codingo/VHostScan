@@ -1,0 +1,4 @@
+-r requirements.txt
+
+pytest==3.2.3
+pytest-mock==1.6.3

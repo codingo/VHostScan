@@ -105,3 +105,6 @@ ENV/
 *.pyproj
 *.sln
 *.sqlite
+
+# vscode editor
+.vscode
