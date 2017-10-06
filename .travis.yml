@@ -9,7 +9,5 @@ install:
   - pip --version
   - pip install -r requirements.txt
   - pip install pep8 
-before_script:
-  - pep8 *
 script:
   - pytest
