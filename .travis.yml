@@ -1,14 +1,13 @@
 language: python
 python:
-  - 3.2
-  - 3.3
   - 3.4
   - 3.5
   - 3.6
 install:
-  - pip install -r ./requirements.txt
-  - pip install pep8 --use-mirrors
+  - pip --version
+  - pip install -r requirements.txt
+  - pip install pep8 
 before_script:
-  - pep8
+  - pep8 --ignore=E501,W293,E202,E241,W291   *.py 
 script:
   - pytest

@@ -96,7 +96,6 @@ def main():
     scanner_args = vars(arguments)
     scanner_args.update({'target': arguments.target_hosts, 'wordlist': wordlist, 'user_agents': user_agents})
     scanner = virtual_host_scanner(**scanner_args)
-    
     scanner.scan()
     output = output_helper(scanner, arguments)
 
