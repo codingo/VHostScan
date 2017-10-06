@@ -10,6 +10,6 @@ install:
   - pip install -r requirements.txt
   - pip install pep8 
 before_script:
-  - pep8 --ignore=E501,W293,E202   *.py 
+  - pep8 --ignore=E501,W293,E202,E241,W291   *.py 
 script:
   - pytest
