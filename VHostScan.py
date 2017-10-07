@@ -28,6 +28,7 @@ def main():
 
     parser.add_argument('--ignore-http-codes', dest='ignore_http_codes', type=str, help='Comma separated list of http codes to ignore with virtual host scans (default 404).', default='404')
     parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount (default 0).', default=0)
+    parser.add_argument('--first-hit', dest='first_hit', action='store_true', help='Return first successful result.', default=False)
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
     parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP (default http).", default=False)
     parser.add_argument("--fuzzy-logic", dest="fuzzy_logic", action="store_true", help="If set then fuzzy match will be performed against unique hosts (default off).", default=False)
@@ -40,7 +41,7 @@ def main():
     parser.add_argument("-oJ", dest="output_json", help="JSON output printed to a file when the -oJ option is specified with a filename argument." )
     parser.add_argument("-", dest="stdin", action="store_true", help="By passing a blank '-' you tell VHostScan to expect input from stdin (pipe).", default=False)
 
-    arguments = parser.parse_args()    
+    arguments = parser.parse_args()
     wordlist = []
 
     word_list_types = []
@@ -69,22 +70,25 @@ def main():
 
     user_agents = []
     if arguments.user_agent:
-        print('[>] User-Agent specified, using it')
+        print('[>] User-Agent specified, using it.')
         user_agents = [arguments.user_agent]
     elif arguments.random_agent:
-        print('[>] Random User-Agent flag set')
+        print('[>] Random User-Agent flag set.')
         user_agents = load_random_user_agents()
 
     if(arguments.ssl):
-        print("[>] SSL flag set, sending all results over HTTPS")
+        print("[>] SSL flag set, sending all results over HTTPS.")
 
     if(arguments.add_waf_bypass_headers):
-        print("[>] WAF flag set, sending simple WAF bypass headers")
+        print("[>] WAF flag set, sending simple WAF bypass headers.")
 
     print("[>] Ignoring HTTP codes: %s" % (arguments.ignore_http_codes))
-    
+
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
+
+    if arguments.first_hit:
+        print("[>] First hit is set.")
 
     if not arguments.no_lookup:
         for ip in Resolver().query(arguments.target_hosts, 'A'):
