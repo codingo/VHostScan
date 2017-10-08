@@ -8,7 +8,7 @@ class file_helper(object):
 
     def check_directory(self):
         directory = os.path.dirname(self.output_file)
-        
+
         try:
             os.stat(directory)
         except:
@@ -18,7 +18,7 @@ class file_helper(object):
     # placeholder for error checking on -oJ implementation
     def is_json(json_file):
         try:
-            with open(json_file, "r") as f: 
+            with open(json_file, "r") as f:
                 json_object = json.load(f)
         except ValueError:
             return False
@@ -27,7 +27,7 @@ class file_helper(object):
     def write_file(self, contents):
         # check if host directory exists, if not create it
         self.check_directory()
-        
+
         with open(self.output_file, "w") as o:
             o.write(contents)
 
