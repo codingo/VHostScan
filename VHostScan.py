@@ -28,7 +28,7 @@ def main():
 
     parser.add_argument('--ignore-http-codes', dest='ignore_http_codes', type=str, help='Comma separated list of http codes to ignore with virtual host scans (default 404).', default='404')
     parser.add_argument('--ignore-content-length', dest='ignore_content_length', type=int, help='Ignore content lengths of specificed amount (default 0).', default=0)
-    parser.add_argument('--first-hit', dest='first_hit', action='store_true', help='Return first successful result.', default=False)
+    parser.add_argument('--first-hit', dest='first_hit', action='store_true', help='Return first successful result. Only use in scenarios where you are sure no catch-all is configured (such as a CTF).', default=False)
     parser.add_argument('--unique-depth', dest='unique_depth', type=int, help='Show likely matches of page content that is found x times (default 1).', default=1)
     parser.add_argument("--ssl", dest="ssl",   action="store_true", help="If set then connections will be made over HTTPS instead of HTTP (default http).", default=False)
     parser.add_argument("--fuzzy-logic", dest="fuzzy_logic", action="store_true", help="If set then fuzzy match will be performed against unique hosts (default off).", default=False)
