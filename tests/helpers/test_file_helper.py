@@ -39,4 +39,3 @@ def test_get_combined_word_lists(wordlist):
 
     assert wordlist.files == result['file_paths']
     assert wordlist.words == result['words']
-    

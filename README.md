@@ -39,6 +39,7 @@ $ pip install -r requirements.txt
 | -r REAL_PORT | The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT). |
 | --ignore-http-codes IGNORE_HTTP_CODES | Comma separated list of http codes to ignore with virtual host scans (default 404). |
 | --ignore-content-length IGNORE_CONTENT_LENGTH | Ignore content lengths of specificed amount. |
+| --first-hit | Return first successful result. Only use in scenarios where you are sure no catch-all is configured (such as a CTF). |
 | --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
 | --fuzzy-logic | If set then all unique content replies are compared and a similarity ratio is given for each pair. This helps to isolate vhosts in situations where a default page isn't static (such as having the time on it). |
@@ -50,6 +51,7 @@ $ pip install -r requirements.txt
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
 | -oJ OUTPUT_JSON | JSON output printed to a file when the -oJ option is specified with a filename argument. |
 | - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
+
 
 ## Usage Examples
 
