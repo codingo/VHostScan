@@ -20,6 +20,7 @@ def test_parse_arguments_default_value(tmpdir):
         'real_port': False,
         'ignore_http_codes': '404',
         'ignore_content_length': 0,
+        'first_hit': False ,
         'unique_depth': 1,
         'fuzzy_logic': False,
         'no_lookup': False,
