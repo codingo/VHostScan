@@ -7,9 +7,16 @@ from dns.resolver import Resolver
 from socket import gethostbyaddr
 from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
-from lib.helpers.file_helper import get_combined_word_lists, load_random_user_agents
+from lib.helpers.file_helper import get_combined_word_lists
+from lib.helpers.file_helper import load_random_user_agents
 from lib.core.__version__ import __version__
 from lib.input import cli_argument_parser
+
+DEFAULT_WORDLIST_FILE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    'wordlists',
+    'virtual-host-scanning.txt'
+)
 
 
 def print_banner():
@@ -20,13 +27,14 @@ def print_banner():
 
 def main():
     print_banner()
-    
+
     parser = cli_argument_parser()
     arguments = parser.parse(sys.argv[1:])
 
     wordlist = []
     word_list_types = []
-    default_wordlist = "./wordlists/virtual-host-scanning.txt" if not arguments.stdin else None
+
+    default_wordlist = DEFAULT_WORDLIST_FILE if not arguments.stdin else None
 
     if arguments.stdin:
         word_list_types.append('stdin')
@@ -42,11 +50,14 @@ def main():
         print("[!] No words found in provided wordlists, unable to scan.")
         sys.exit(1)
 
-    print("[+] Starting virtual host scan for {host} using port {port} and {inputs}".format(
-        host=arguments.target_hosts,
-        port=arguments.port,
-        inputs=', '.join(word_list_types),
-    ))
+    print(
+        "[+] Starting virtual host scan for {host} using "
+        "port {port} and {inputs}".format(
+            host=arguments.target_hosts,
+            port=arguments.port,
+            inputs=', '.join(word_list_types),
+        )
+    )
 
     user_agents = []
     if arguments.user_agent:
@@ -62,10 +73,14 @@ def main():
     if(arguments.add_waf_bypass_headers):
         print("[>] WAF flag set, sending simple WAF bypass headers.")
 
-    print("[>] Ignoring HTTP codes: %s" % (arguments.ignore_http_codes))
+    print("[>] Ignoring HTTP codes: {}".format(arguments.ignore_http_codes))
 
     if(arguments.ignore_content_length > 0):
-        print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
+        print(
+            "[>] Ignoring Content length: {}".format(
+                arguments.ignore_content_length
+            )
+        )
 
     if arguments.first_hit:
         print("[>] First hit is set.")
@@ -78,7 +93,12 @@ def main():
             wordlist.extend(aliases)
 
     scanner_args = vars(arguments)
-    scanner_args.update({'target': arguments.target_hosts, 'wordlist': wordlist, 'user_agents': user_agents})
+    scanner_args.update({
+        'target': arguments.target_hosts,
+        'wordlist': wordlist,
+        'user_agents': user_agents
+    })
+
     scanner = virtual_host_scanner(**scanner_args)
     scanner.scan()
     output = output_helper(scanner, arguments)
