@@ -50,22 +50,25 @@ def main():
 
     user_agents = []
     if arguments.user_agent:
-        print('[>] User-Agent specified, using it')
+        print('[>] User-Agent specified, using it.')
         user_agents = [arguments.user_agent]
     elif arguments.random_agent:
-        print('[>] Random User-Agent flag set')
+        print('[>] Random User-Agent flag set.')
         user_agents = load_random_user_agents()
 
     if(arguments.ssl):
-        print("[>] SSL flag set, sending all results over HTTPS")
+        print("[>] SSL flag set, sending all results over HTTPS.")
 
     if(arguments.add_waf_bypass_headers):
-        print("[>] WAF flag set, sending simple WAF bypass headers")
+        print("[>] WAF flag set, sending simple WAF bypass headers.")
 
     print("[>] Ignoring HTTP codes: %s" % (arguments.ignore_http_codes))
-    
+
     if(arguments.ignore_content_length > 0):
         print("[>] Ignoring Content length: %s" % (arguments.ignore_content_length))
+
+    if arguments.first_hit:
+        print("[>] First hit is set.")
 
     if not arguments.no_lookup:
         for ip in Resolver().query(arguments.target_hosts, 'A'):

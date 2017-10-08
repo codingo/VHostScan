@@ -6,15 +6,27 @@ import hashlib
 import pandas as pd
 import time
 from lib.core.discovered_host import *
+from urllib3.util import ssl_
 
 DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
 
+_target_host = None
+_ssl_wrap_socket = ssl_.ssl_wrap_socket
+def ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
+                    ca_certs=None, server_hostname=None,
+                    ssl_version=None, ciphers=None, ssl_context=None,
+                    ca_cert_dir=None):
+        ssl_wrap_socket_(sock, keyfile=keyfile, certfile=certfile, cert_reqs=cert_reqs,
+                    ca_certs=ca_certs, server_hostname=_target_host,
+                    ssl_version=ssl_version, ciphers=ciphers, ssl_context=ssl_context,
+                    ca_cert_dir=ca_cert_dir)
+ssl_.ssl_wrap_socket = _ssl_wrap_socket 
 
 class virtual_host_scanner(object):
     """Virtual host scanning class
-    
+
     Virtual host scanner has the following properties:
-    
+
     Attributes:
         wordlist: location to a wordlist file to use with scans
         target: the target for scanning
@@ -38,6 +50,7 @@ class virtual_host_scanner(object):
         self.add_waf_bypass_headers = kwargs.get('add_waf_bypass_headers', False)
         self.unique_depth = int(kwargs.get('unique_depth', 1))
         self.ignore_http_codes = kwargs.get('ignore_http_codes', '404')
+        self.first_hit = kwargs.get('first_hit')
 
         # this can be made redundant in future with better exceptions
         self.completed_scan=False
@@ -85,6 +98,7 @@ class virtual_host_scanner(object):
                 })
             
             dest_url = '{}://{}:{}/'.format('https' if self.ssl else 'http', self.target, self.port)
+            _target_host = hostname
 
             try:
                 res = requests.get(dest_url, headers=headers, verify=False)
@@ -99,26 +113,15 @@ class virtual_host_scanner(object):
 
             # hash the page results to aid in identifing unique content
             page_hash = hashlib.sha256(res.text.encode('utf-8')).hexdigest()
-            output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(hostname, res.status_code, 
-                                                                               res.headers.get('content-length'), page_hash)
-            host = discovered_host()
-            host.hostname = hostname
-            host.response_code = res.status_code
-            host.hash = page_hash
-            host.content = res.content
 
-            for key, val in res.headers.items():
-                output += '  {}: {}\n'.format(key, val)
-                host.keys.append('{}: {}'.format(key, val))
-
-            self.hosts.append(host)
-            
-            # print current results so feedback remains in "realtime"
-            print(output)
+            self.hosts.append(self.create_host(res, hostname, page_hash))
 
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
-            
+
+            if len(self.hosts) == 2 and self.first_hit:
+                break
+
             #rate limit the connection, if the int is 0 it is ignored
             time.sleep(self.rate_limit)
 
@@ -141,3 +144,24 @@ class virtual_host_scanner(object):
         matches = ((segmented_data["key_col"].values).tolist())
 
         return matches
+
+    def create_host(self, response, hostname, page_hash):
+        """
+        Creates a host using the responce and the hash.
+        Prints current result in real time.
+        """
+        output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(hostname, response.status_code, 
+                                                                    response.headers.get('content-length'), page_hash)
+        host = discovered_host()
+        host.hostname = hostname
+        host.response_code = response.status_code
+        host.hash = page_hash
+        host.content = response.content
+
+        for key, val in response.headers.items():
+            output += '  {}: {}\n'.format(key, val)
+            host.keys.append('{}: {}'.format(key, val))
+
+        print(output)
+
+        return host
