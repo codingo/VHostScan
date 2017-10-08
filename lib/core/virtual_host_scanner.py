@@ -6,9 +6,21 @@ import hashlib
 import pandas as pd
 import time
 from lib.core.discovered_host import *
+from urllib3.util import ssl_
 
 DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
 
+_target_host = None
+_ssl_wrap_socket = ssl_.ssl_wrap_socket
+def ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
+                    ca_certs=None, server_hostname=None,
+                    ssl_version=None, ciphers=None, ssl_context=None,
+                    ca_cert_dir=None):
+        ssl_wrap_socket_(sock, keyfile=keyfile, certfile=certfile, cert_reqs=cert_reqs,
+                    ca_certs=ca_certs, server_hostname=_target_host,
+                    ssl_version=ssl_version, ciphers=ciphers, ssl_context=ssl_context,
+                    ca_cert_dir=ca_cert_dir)
+ssl_.ssl_wrap_socket = _ssl_wrap_socket 
 
 class virtual_host_scanner(object):
     """Virtual host scanning class
@@ -85,6 +97,7 @@ class virtual_host_scanner(object):
                 })
             
             dest_url = '{}://{}:{}/'.format('https' if self.ssl else 'http', self.target, self.port)
+            _target_host = hostname
 
             try:
                 res = requests.get(dest_url, headers=headers, verify=False)
