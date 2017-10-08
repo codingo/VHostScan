@@ -3,4 +3,3 @@
 # +-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan
 
 __version__ = '1.6'
-
