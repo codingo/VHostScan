@@ -134,7 +134,7 @@ class virtual_host_scanner(object):
             if res.status_code in self.ignore_http_codes:
                 continue
 
-            response_length = int(res.headers.get('content-length'))
+            response_length = int(res.headers.get('content-length', 0))
             if self.ignore_content_length and \
                self.ignore_content_length == response_length:
                 continue
