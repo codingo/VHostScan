@@ -47,6 +47,11 @@ class cli_argument_parser(object):
         )
 
         parser.add_argument(
+            '--first-hit', dest='first_hit', action='store_true', default=False,
+            help='Return first successful result. Only use in scenarios where you are sure no catch-all is configured (such as a CTF).'
+        )
+
+        parser.add_argument(
             '--unique-depth', dest='unique_depth', type=int, default=1,
             help='Show likely matches of page content that is found x times (default 1).'
         )
