@@ -67,7 +67,7 @@ class output_helper(object):
                                    'Hash': host.hash,
                                    'Headers': headers}
         output['Result'] = result
-        file.write_file(json.dumps(output))
+        file.write_file(json.dumps(output, indent=2))
 
 
     def output_fuzzy(self):
