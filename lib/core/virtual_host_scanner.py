@@ -147,7 +147,7 @@ class virtual_host_scanner(object):
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
 
-            if len(self.hosts) == 2 and self.first_hit:
+            if len(self.hosts) >= 1 and self.first_hit:
                 break
 
             # rate limit the connection, if the int is 0 it is ignored
@@ -176,7 +176,7 @@ class virtual_host_scanner(object):
             lambda x: len(x) <= self.unique_depth
         )
 
-        return matches
+        return segmented_data["key_col"].values.tolist()
 
     def create_host(self, response, hostname, page_hash):
         """
