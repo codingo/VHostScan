@@ -74,6 +74,10 @@ class output_helper(object):
             }
 
         output['Result'] = result
+
+        if not file.is_json(output):
+            print("[!] Json format check failed")
+
         file.write_file(json.dumps(output, indent=2))
 
     def output_fuzzy(self):

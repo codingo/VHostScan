@@ -16,7 +16,6 @@ class file_helper(object):
             os.mkdir(directory)
             print("[!] %s didn't exist and has been created." % directory)
 
-    # placeholder for error checking on -oJ implementation
     def is_json(json_file):
         try:
             with open(json_file, "r") as f:
