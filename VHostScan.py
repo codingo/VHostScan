@@ -93,9 +93,9 @@ def main():
                 wordlist.append(str(ip))
                 wordlist.append(host)
                 wordlist.extend(aliases)
-        except (dns.resolver.NXDOMAIN):
+        except (NXDOMAIN):
             print("[!] Couldn't find any records (NXDOMAIN)")
-        except (dns.resolver.NoAnswer):
+        except (NoAnswer):
             print("[!] Couldn't find any records (NoAnswer)")
 
     scanner_args = vars(arguments)
