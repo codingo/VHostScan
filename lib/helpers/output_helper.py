@@ -15,9 +15,6 @@ class output_helper(object):
     def write_normal(self, filename):
         file = file_helper(filename)
 
-        # todo: finish check_directory (needs regex to split out filename)
-        # file.check_directory(filename)
-
         output = self.generate_header()
         output += self.output_normal_likely()
 
@@ -25,7 +22,6 @@ class output_helper(object):
             output += self.output_fuzzy()
 
         output += self.output_normal_detail()
-
         file.write_file(output)
 
     def output_normal_likely(self):
@@ -74,6 +70,10 @@ class output_helper(object):
             }
 
         output['Result'] = result
+
+        if not file.is_json(output):
+            print("[!] Json format check failed")
+
         file.write_file(json.dumps(output, indent=2))
 
     def output_fuzzy(self):
