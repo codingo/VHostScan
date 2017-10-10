@@ -49,6 +49,7 @@ $ pip install -r requirements.txt
 | --user-agent | Specify a user agent to use for scans. |
 | --waf | If set then simple WAF bypass headers will be sent. |
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
+| -oG OUTPUT_GREPABLE | Grepable output printed to a file when the -oG is specified with a filename argument. |
 | -oJ OUTPUT_JSON | JSON output printed to a file when the -oJ option is specified with a filename argument. |
 | - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
 
