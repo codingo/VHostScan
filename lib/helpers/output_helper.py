@@ -24,6 +24,14 @@ class output_helper(object):
         output += self.output_normal_detail()
         file.write_file(output)
 
+    def write_grepable(self, filename):
+        file = file_helper(filename)
+
+        output = self.generate_header()
+        output += self.output_grepable_detail()
+
+        file.write_file(output)
+
     def output_normal_likely(self):
         uniques = False
         depth = str(self.scanner.unique_depth)
@@ -104,6 +112,16 @@ class output_helper(object):
 
             for key in host.keys:
                 output += "\n\t{}".format(key)
+
+        return output
+
+    def output_grepable_detail(self):
+        for host in self.scanner.hosts:
+            output += "\n{}\t{}\t{}".format(
+                str(host.hostname),
+                str(host.response_code),
+                str(host.hash)
+            )
 
         return output
 

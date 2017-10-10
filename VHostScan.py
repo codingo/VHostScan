@@ -120,7 +120,11 @@ def main():
 
     if(arguments.output_json):
         output.output_json(arguments.output_json)
-        print("\n[+] Writing json ouptut to %s" % arguments.output_json)
+        print("\n[+] Writing json output to %s" % arguments.output_json)
+
+    if(arguments.output_grepable):
+        output.output_grepable(arguments.output_grepable)
+        print("\n[+] Writing grepable ouptut to %s" % arguments.output_json)
 
 
 if __name__ == "__main__":
