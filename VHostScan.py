@@ -86,11 +86,17 @@ def main():
         print("[>] First hit is set.")
 
     if not arguments.no_lookup:
-        for ip in Resolver().query(arguments.target_hosts, 'A'):
-            host, aliases, ips = gethostbyaddr(str(ip))
-            wordlist.append(str(ip))
-            wordlist.append(host)
-            wordlist.extend(aliases)
+        try:
+            print("[+] Resolving DNS for additional wordlist entries")
+            for ip in Resolver().query(arguments.target_hosts, 'A'):
+                host, aliases, ips = gethostbyaddr(str(ip))
+                wordlist.append(str(ip))
+                wordlist.append(host)
+                wordlist.extend(aliases)
+        except (dns.resolver.NXDOMAIN):
+            print("[!] Couldn't find any records (NXDOMAIN)")
+        except (dns.resolver.NoAnswer):
+            print("[!] Couldn't find any records (NoAnswer)")
 
     scanner_args = vars(arguments)
     scanner_args.update({
