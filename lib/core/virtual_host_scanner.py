@@ -8,19 +8,26 @@ import time
 from lib.core.discovered_host import *
 from urllib3.util import ssl_
 
-DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) '\
+                     'AppleWebKit/537.36 (KHTML, like Gecko) '\
+                     'Chrome/61.0.3163.100 Safari/537.36'
 
 _target_host = None
 _ssl_wrap_socket = ssl_.ssl_wrap_socket
+
+
 def ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
                     ca_certs=None, server_hostname=None,
                     ssl_version=None, ciphers=None, ssl_context=None,
                     ca_cert_dir=None):
-        ssl_wrap_socket_(sock, keyfile=keyfile, certfile=certfile, cert_reqs=cert_reqs,
-                    ca_certs=ca_certs, server_hostname=_target_host,
-                    ssl_version=ssl_version, ciphers=ciphers, ssl_context=ssl_context,
-                    ca_cert_dir=ca_cert_dir)
-ssl_.ssl_wrap_socket = _ssl_wrap_socket 
+        ssl_wrap_socket_(sock, keyfile=keyfile, certfile=certfile,
+                         cert_reqs=cert_reqs, ca_certs=ca_certs,
+                         server_hostname=_target_host, ssl_version=ssl_version,
+                         ciphers=ciphers, ssl_context=ssl_context,
+                         ca_cert_dir=ca_cert_dir)
+
+ssl_.ssl_wrap_socket = _ssl_wrap_socket
+
 
 class virtual_host_scanner(object):
     """Virtual host scanning class
@@ -35,8 +42,6 @@ class virtual_host_scanner(object):
         ignore_content_length: integer value of content length to ignore
         output: folder to write output file to
     """
-
-
     def __init__(self, target, wordlist, **kwargs):
         self.target = target
         self.wordlist = wordlist
@@ -44,25 +49,35 @@ class virtual_host_scanner(object):
         self.rate_limit = int(kwargs.get('rate_limit', 0))
         self.port = int(kwargs.get('port', 80))
         self.real_port = int(kwargs.get('real_port', 80))
-        self.ignore_content_length = int(kwargs.get('ignore_content_length', 0))
         self.ssl = kwargs.get('ssl', False)
         self.fuzzy_logic = kwargs.get('fuzzy_logic', False)
-        self.add_waf_bypass_headers = kwargs.get('add_waf_bypass_headers', False)
         self.unique_depth = int(kwargs.get('unique_depth', 1))
         self.ignore_http_codes = kwargs.get('ignore_http_codes', '404')
         self.first_hit = kwargs.get('first_hit')
 
+        self.ignore_content_length = int(
+            kwargs.get('ignore_content_length', 0)
+        )
+
+        self.add_waf_bypass_headers = kwargs.get(
+            'add_waf_bypass_headers',
+            False
+        )
+
         # this can be made redundant in future with better exceptions
-        self.completed_scan=False
-        
-        # this is maintained until likely-matches is refactored to use new class
+        self.completed_scan = False
+
+        # this is maintained until likely-matches is refactored to use
+        # new class
         self.results = []
-        
-        # store associated data for discovered hosts in array for oN, oJ, etc'
+
+        # store associated data for discovered hosts
+        # in array for oN, oJ, etc'
         self.hosts = []
 
         # available user-agents
-        self.user_agents = list(kwargs.get('user_agents')) or [DEFAULT_USER_AGENT]
+        self.user_agents = list(kwargs.get('user_agents')) \
+            or [DEFAULT_USER_AGENT]
 
     @property
     def ignore_http_codes(self):
@@ -70,8 +85,9 @@ class virtual_host_scanner(object):
 
     @ignore_http_codes.setter
     def ignore_http_codes(self, codes):
-        self._ignore_http_codes = [int(code) for code in codes.replace(' ', '').split(',')]
-
+        self._ignore_http_codes = [
+            int(code) for code in codes.replace(' ', '').split(',')
+        ]
 
     def scan(self):
         if not self.base_host:
@@ -83,9 +99,14 @@ class virtual_host_scanner(object):
         for virtual_host in self.wordlist:
             hostname = virtual_host.replace('%s', self.base_host)
 
+            if self.real_port == 80:
+                host_header = hostname
+            else:
+                host_header = '{}:{}'.format(hostname, self.real_port)
+
             headers = {
                 'User-Agent': random.choice(self.user_agents),
-                'Host': hostname if self.real_port == 80 else '{}:{}'.format(hostname, self.real_port),
+                'Host': host_header,
                 'Accept': '*/*'
             }
 
@@ -96,8 +117,13 @@ class virtual_host_scanner(object):
                     'X-Remote-IP': '127.0.0.1',
                     'X-Remote-Addr': '127.0.0.1'
                 })
-            
-            dest_url = '{}://{}:{}/'.format('https' if self.ssl else 'http', self.target, self.port)
+
+            dest_url = '{}://{}:{}/'.format(
+                'https' if self.ssl else 'http',
+                self.target,
+                self.port
+            )
+
             _target_host = hostname
 
             try:
@@ -108,7 +134,9 @@ class virtual_host_scanner(object):
             if res.status_code in self.ignore_http_codes:
                 continue
 
-            if self.ignore_content_length > 0 and self.ignore_content_length == int(res.headers.get('content-length')):
+            response_length = int(res.headers.get('content-length', 0))
+            if self.ignore_content_length and \
+               self.ignore_content_length == response_length:
                 continue
 
             # hash the page results to aid in identifing unique content
@@ -119,44 +147,54 @@ class virtual_host_scanner(object):
             # add url and hash into array for likely matches
             self.results.append(hostname + ',' + page_hash)
 
-            if len(self.hosts) == 2 and self.first_hit:
+            if len(self.hosts) >= 1 and self.first_hit:
                 break
 
-            #rate limit the connection, if the int is 0 it is ignored
+            # rate limit the connection, if the int is 0 it is ignored
             time.sleep(self.rate_limit)
 
-        self.completed_scan=True
-
+        self.completed_scan = True
 
     def likely_matches(self):
         if self.completed_scan is False:
-            print("[!] Likely matches cannot be printed as a scan has not yet been run.")
-            return      
+            print("[!] Likely matches cannot be printed "
+                  "as a scan has not yet been run.")
+            return
 
         # segment results from previous scan into usable results
-        segmented_data={}
+        segmented_data = {}
         for item in self.results:
             result = item.split(",")
             segmented_data[result[0]] = result[1]
 
-        dataframe = pd.DataFrame([[key, value] for key, value in segmented_data.items()], columns=["key_col", "val_col"])
-        segmented_data = dataframe.groupby("val_col").filter(lambda x: len(x) <= self.unique_depth)
-        matches = ((segmented_data["key_col"].values).tolist())
+        dataframe = pd.DataFrame([
+            [key, value] for key, value in segmented_data.items()],
+            columns=["key_col", "val_col"]
+        )
 
-        return matches
+        segmented_data = dataframe.groupby("val_col").filter(
+            lambda x: len(x) <= self.unique_depth
+        )
+
+        return segmented_data["key_col"].values.tolist()
 
     def create_host(self, response, hostname, page_hash):
         """
         Creates a host using the responce and the hash.
         Prints current result in real time.
         """
-        output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(hostname, response.status_code, 
-                                                                    response.headers.get('content-length'), page_hash)
+        output = '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(
+            hostname,
+            response.status_code,
+            response.headers.get('content-length'),
+            page_hash
+        )
+
         host = discovered_host()
         host.hostname = hostname
         host.response_code = response.status_code
         host.hash = page_hash
-        host.content = response.content
+        host.contnet = response.content
 
         for key, val in response.headers.items():
             output += '  {}: {}\n'.format(key, val)
