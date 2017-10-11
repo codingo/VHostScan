@@ -1,6 +1,7 @@
 from setuptools import find_packages, setup
 from lib.core.__version__ import __version__
 
+
 def dependencies(file):
     with open(file) as f:
         return f.read().splitlines()
