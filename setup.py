@@ -17,6 +17,7 @@ with open("README.md") as f:
         author_email="codingo@protonmail.com",
         url="http://github.com/codingo/VHostScan",
         packages=find_packages(exclude=('tests')),
+        package_data={'wordlists': ['*.txt', './wordlists/*.txt']},
         scripts=['VHostScan.py'],
         install_requires=dependencies('requirements.txt'),
         tests_require=dependencies('test-requirements.txt'),
