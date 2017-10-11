@@ -1,5 +1,5 @@
 from setuptools import find_packages, setup
-
+from lib.core.__version__ import __version__
 
 def dependencies(file):
     with open(file) as f:
@@ -14,6 +14,7 @@ with open("README.md") as f:
                     "scenarios, aliases and dynamic default pages.",
         long_description=f.read(),
         author="codingo",
+        version=__version__,
         author_email="codingo@protonmail.com",
         url="http://github.com/codingo/VHostScan",
         packages=find_packages(exclude=('tests')),
