@@ -30,6 +30,7 @@ def test_parse_arguments_default_value(tmpdir):
         'add_waf_bypass_headers': False,
         'output_normal': None,
         'output_json': None,
+        'output_grepable' : None,
         'stdin': False,
         'ssl': False,
     }
@@ -83,6 +84,7 @@ def test_parse_arguments_custom_arguments(tmpdir):
         'add_waf_bypass_headers': True,
         'output_normal': '/tmp/on',
         'output_json': None,
+        'output_grepable' : None,
         'stdin': True,
     }
 

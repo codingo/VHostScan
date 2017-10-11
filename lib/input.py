@@ -117,6 +117,12 @@ class cli_argument_parser(object):
                  'specified with a filename argument.'
         )
 
+        output.add_argument(
+            '-oG', dest='output_grepable',
+            help='Grepable output printed to a file when the -oG option is '
+                 'specified with a filename argument.'
+        )
+
         user_agent = parser.add_mutually_exclusive_group()
         user_agent.add_argument(
             '--random-agent', dest='random_agent', action='store_true',
