@@ -34,7 +34,8 @@ def main():
     wordlist = []
     word_list_types = []
 
-    default_wordlist = DEFAULT_WORDLIST_FILE if not sys.stdin.isatty() else None
+    default_wordlist = DEFAULT_WORDLIST_FILE \
+        if not sys.stdin.isatty() else None
 
     if not sys.stdin.isatty():
         word_list_types.append('stdin')
