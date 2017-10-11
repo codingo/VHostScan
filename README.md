@@ -51,7 +51,6 @@ $ pip install -r requirements.txt
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
 | -oG OUTPUT_GREPABLE | Grepable output printed to a file when the -oG is specified with a filename argument. |
 | -oJ OUTPUT_JSON | JSON output printed to a file when the -oJ option is specified with a filename argument. |
-| - | By passing a blank '-' you tell VHostScan to expect input from stdin (pipe). |
 
 
 ## Usage Examples
@@ -85,7 +84,7 @@ $ cat bank.htb | VHostScan.py -t 10.10.10.29 -
 ### STDIN and WordList
 You can still specify a wordlist to use along with stdin. In these cases wordlist information will be appended to stdin. For example:
 ```bash
-$ echo -e 'a.example.com\b.example.com' | VhostScan.py -t localhost -w ./wordlists/wordlist.txt -
+$ echo -e 'a.example.com\b.example.com' | VhostScan.py -t localhost -w ./wordlists/wordlist.txt
 ```
 ### Fuzzy Logic
 Here is an example with fuzzy logic enabled. You can see the last comparison is much more similar than the first two (it is comparing the content not the actual hashes):
