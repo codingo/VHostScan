@@ -84,7 +84,7 @@ $ cat bank.htb | VHostScan.py -t 10.10.10.29 -
 ### STDIN and WordList
 You can still specify a wordlist to use along with stdin. In these cases wordlist information will be appended to stdin. For example:
 ```bash
-$ echo -e 'a.example.com\b.example.com' | VhostScan.py -t localhost -w ./wordlists/wordlist.txt
+$ echo -e 'a.example.com\b.example.com' | VHostScan.py -t localhost -w ./wordlists/wordlist.txt
 ```
 ### Fuzzy Logic
 Here is an example with fuzzy logic enabled. You can see the last comparison is much more similar than the first two (it is comparing the content not the actual hashes):
