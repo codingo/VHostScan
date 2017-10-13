@@ -20,7 +20,7 @@ def test_parse_arguments_default_value(tmpdir):
         'real_port': False,
         'ignore_http_codes': '404',
         'ignore_content_length': 0,
-        'first_hit': False ,
+        'first_hit': False,
         'unique_depth': 1,
         'fuzzy_logic': False,
         'no_lookup': False,
@@ -31,7 +31,6 @@ def test_parse_arguments_default_value(tmpdir):
         'output_normal': None,
         'output_json': None,
         'output_grepable' : None,
-        'stdin': False,
         'ssl': False,
     }
     
@@ -60,7 +59,6 @@ def test_parse_arguments_custom_arguments(tmpdir):
         '--user-agent', 'some-user-agent',
         '--waf',
         '-oN', '/tmp/on',
-        '-',
     ]
 
     arguments = cli_argument_parser().parse(argv)
@@ -85,7 +83,6 @@ def test_parse_arguments_custom_arguments(tmpdir):
         'output_normal': '/tmp/on',
         'output_json': None,
         'output_grepable' : None,
-        'stdin': True,
     }
 
     assert vars(arguments) == expected_arguments

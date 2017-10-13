@@ -98,12 +98,6 @@ class cli_argument_parser(object):
             help='If set then simple WAF bypass headers will be sent.'
         )
 
-        parser.add_argument(
-            '-', dest='stdin', action='store_true', default=False,
-            help="By passing a blank '-' you tell VHostScan to expect input "
-                 "from stdin (pipe)."
-        )
-
         output = parser.add_mutually_exclusive_group()
         output.add_argument(
             '-oN', dest='output_normal',
