@@ -33,6 +33,7 @@ def _ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
 ssl_.ssl_wrap_socket = _ssl_wrap_socket
 '''
 
+
 class virtual_host_scanner(object):
     """Virtual host scanning class
 
