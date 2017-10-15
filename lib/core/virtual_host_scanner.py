@@ -19,7 +19,7 @@ from urllib3.util import ssl_
 
 _target_host = None
 _orig_wrap_socket = ssl_.ssl_wrap_socket
- 
+
 def _ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
                      ca_certs=None, server_hostname=None,
                      ssl_version=None, ciphers=None, ssl_context=None,
@@ -29,7 +29,7 @@ def _ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
                       server_hostname=_target_host, ssl_version=ssl_version,
                       ciphers=ciphers, ssl_context=ssl_context,
                       ca_cert_dir=ca_cert_dir)
- 
+
 ssl_.ssl_wrap_socket = _ssl_wrap_socket
 '''
 
