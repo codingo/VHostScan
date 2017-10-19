@@ -23,7 +23,8 @@ class WordList:
         if stdin_words:
             wordlist_types.append('stdin')
             wordlist.extend(stdin_words)
-        combined = get_combined_word_lists(wordlist_files or DEFAULT_WORDLIST_FILE)
+        combined_files = wordlist_files or DEFAULT_WORDLIST_FILE
+        combined = get_combined_word_lists(combined_files)
         if combined:
             wordlist_types.append('wordlists: {}'.format(
                 ', '.join(combined['file_paths'])))
