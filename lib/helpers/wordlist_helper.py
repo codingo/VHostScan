@@ -19,7 +19,6 @@ class WordList:
         wordlist = []
         wordlist_types = []
         stdin_words = self.get_stdin_wordlist()
-        print(stdin_words)
         if stdin_words:
             wordlist_types.append('stdin')
             wordlist.extend(stdin_words)
