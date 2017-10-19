@@ -32,7 +32,7 @@ def main():
     arguments = parser.parse(sys.argv[1:])
 
     wordlist_helper = WordList()
-    wordlist, word_list_types = wordlist_helper.get_wordlist(arguments.wordlist)
+    wordlist, wordlist_types = wordlist_helper.get_wordlist(arguments.wordlist)
 
     if len(wordlist) == 0:
         print("[!] No words found in provided wordlists, unable to scan.")
@@ -43,7 +43,7 @@ def main():
         "port {port} and {inputs}".format(
             host=arguments.target_hosts,
             port=arguments.port,
-            inputs=', '.join(word_list_types),
+            inputs=', '.join(wordlist_types),
         )
     )
 
