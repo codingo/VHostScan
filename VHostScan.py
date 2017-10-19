@@ -9,6 +9,7 @@ from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
 from lib.helpers.file_helper import get_combined_word_lists
 from lib.helpers.file_helper import load_random_user_agents
+from lib.helpers.wordlist_helper import WordList
 from lib.core.__version__ import __version__
 from lib.input import cli_argument_parser
 
@@ -31,6 +32,7 @@ def main():
     parser = cli_argument_parser()
     arguments = parser.parse(sys.argv[1:])
 
+    wordlist_helper = WordList()
     wordlist = []
     word_list_types = []
 
@@ -39,7 +41,7 @@ def main():
 
     if not sys.stdin.isatty():
         word_list_types.append('stdin')
-        wordlist.extend(list(line for line in sys.stdin.read().splitlines()))
+        wordlist.extend(wordlist_helper.get_stdin_wordlist())
 
     combined = get_combined_word_lists(arguments.wordlists or default_wordlist)
     word_list_types.append('wordlists: {}'.format(
