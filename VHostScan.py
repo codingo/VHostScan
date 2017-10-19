@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 from socket import gethostbyaddr
 from lib.core.virtual_host_scanner import *
 from lib.helpers.output_helper import *
-from lib.helpers.file_helper import get_combined_word_lists
 from lib.helpers.file_helper import load_random_user_agents
 from lib.helpers.wordlist_helper import WordList
 from lib.core.__version__ import __version__
@@ -33,21 +32,7 @@ def main():
     arguments = parser.parse(sys.argv[1:])
 
     wordlist_helper = WordList()
-    wordlist = []
-    word_list_types = []
-
-    default_wordlist = DEFAULT_WORDLIST_FILE \
-        if sys.stdin.isatty() else None
-
-    if not sys.stdin.isatty():
-        word_list_types.append('stdin')
-        wordlist.extend(wordlist_helper.get_stdin_wordlist())
-
-    combined = get_combined_word_lists(arguments.wordlists or default_wordlist)
-    word_list_types.append('wordlists: {}'.format(
-        ', '.join(combined['file_paths']),
-    ))
-    wordlist.extend(combined['words'])
+    wordlist, word_list_types = wordlist_helper.get_wordlist(arguments.wordlist)
 
     if len(wordlist) == 0:
         print("[!] No words found in provided wordlists, unable to scan.")
