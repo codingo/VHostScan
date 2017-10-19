@@ -12,7 +12,8 @@ DEFAULT_WORDLIST_FILE = os.path.join(
 
 class WordList:
     def get_stdin_wordlist(self):
-        return list(line for line in sys.stdin.read().splitlines()) if not sys.stdin.isatty() else []
+        return list(line for line in sys.stdin.read().splitlines()) \
+            if not sys.stdin.isatty() else []
 
     def get_wordlist(self, wordlist_files=None):
         wordlist = []
@@ -24,6 +25,7 @@ class WordList:
             wordlist.extend(stdin_words)
         combined = get_combined_word_lists(wordlist_files or DEFAULT_WORDLIST_FILE)
         if combined:
-            wordlist_types.append('wordlists: {}'.format(', '.join(combined['file_paths'])))
+            wordlist_types.append('wordlists: {}'.format(
+                ', '.join(combined['file_paths'])))
             wordlist.extend(combined['words'])
         return wordlist, wordlist_types
