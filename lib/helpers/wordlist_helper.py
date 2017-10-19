@@ -16,9 +16,14 @@ class WordList:
 
     def get_wordlist(self, wordlist_files=None):
         wordlist = []
+        wordlist_types = []
         stdin_words = self.get_stdin_wordlist()
+        print(stdin_words)
         if stdin_words:
+            wordlist_types.append('stdin')
             wordlist.extend(stdin_words)
         combined = get_combined_word_lists(wordlist_files or DEFAULT_WORDLIST_FILE)
-        wordlist.extend(combined['words'])
-        return wordlist
+        if combined:
+            wordlist_types.append('wordlists: {}'.format(', '.join(combined['file_paths'])))
+            wordlist.extend(combined['words'])
+        return wordlist, wordlist_types

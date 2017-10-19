@@ -20,7 +20,9 @@ class TestWordList(unittest.TestCase):
         with patch('sys.stdin') as mock_stdin:
             mock_stdin.read = Mock(return_value='\n'.join(stdin_list))
             mock_stdin.isatty = Mock(return_value=False)
-            self.assertEqual(self.wordlist.get_wordlist(), expected_wordlist)
+            wordlist, wordlist_types = self.wordlist.get_wordlist()
+            self.assertEqual(wordlist, expected_wordlist)
 
     def test_using_default_wordlist(self):
-        self.assertEqual(self.wordlist.get_wordlist(), self.default_wordlist)
+        wordlist, wordlist_types = self.wordlist.get_wordlist()
+        self.assertEqual(wordlist, self.default_wordlist)
