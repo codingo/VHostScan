@@ -32,7 +32,7 @@ def main():
     arguments = parser.parse(sys.argv[1:])
 
     wordlist_helper = WordList()
-    wordlist, wordlist_types = wordlist_helper.get_wordlist(arguments.wordlist)
+    wordlist, wordlist_types = wordlist_helper.get_wordlist(arguments.wordlists)
 
     if len(wordlist) == 0:
         print("[!] No words found in provided wordlists, unable to scan.")
