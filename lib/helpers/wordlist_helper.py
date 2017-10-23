@@ -19,7 +19,7 @@ class WordList:
         return list(line for line in sys.stdin.read().splitlines()) \
             if not sys.stdin.isatty() else []
 
-    def get_wordlist(self, wordlist_files=None):
+    def get_wordlist(self, wordlist_files=None, wordlist_prefix=False, wordlist_suffix=False):
         default_wordlist_file = DEFAULT_WORDLIST_FILE
 
         stdin_words = self.get_stdin_wordlist()
@@ -29,10 +29,19 @@ class WordList:
 
         combined_files = wordlist_files or default_wordlist_file
         combined = get_combined_word_lists(combined_files)
+
         if combined:
             words_type = 'wordlists: {}'.format(
                 ', '.join(combined['file_paths']))
             self.set_words(words_type=words_type, words=combined['words'])
+
+        # Apply prefixes
+        if wordlist_prefix:
+            prefixed = [wordlist_prefix + word for word in self.wordlist]
+            self.wordlist = self.wordlist + prefixed
+
+        #if wordlist_suffix:
+            
 
         return self.wordlist, self.wordlist_types
 
