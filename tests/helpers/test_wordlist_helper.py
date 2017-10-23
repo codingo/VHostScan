@@ -15,7 +15,6 @@ class TestWordList(unittest.TestCase):
         stdin_wordlist = ['keyword1', 'keyword1']
         expected_wordlist = []
         expected_wordlist.extend(stdin_wordlist)
-        expected_wordlist.extend(self.default_wordlist)
         with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
             wordlist, wordlist_types = self.wordlist.get_wordlist()
             self.assertEqual(wordlist, expected_wordlist)
