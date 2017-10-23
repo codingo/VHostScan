@@ -20,10 +20,11 @@ class WordList:
             if not sys.stdin.isatty() else []
 
     def get_wordlist(self, wordlist_files=None):
-        stdin_words = self.get_stdin_wordlist()
         default_wordlist_file = DEFAULT_WORDLIST_FILE
+
+        stdin_words = self.get_stdin_wordlist()
         if stdin_words:
-            self.set_words('stdin', stdin_words)
+            self.set_words(words_type='stdin', words=stdin_words)
             default_wordlist_file = None
 
         combined_files = wordlist_files or default_wordlist_file
@@ -31,7 +32,7 @@ class WordList:
         if combined:
             words_type = 'wordlists: {}'.format(
                 ', '.join(combined['file_paths']))
-            self.set_words(words_type, combined['words'])
+            self.set_words(words_type=words_type, words=combined['words'])
 
         return self.wordlist, self.wordlist_types
 
