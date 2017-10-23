@@ -1,6 +1,6 @@
 import unittest
 import pytest
-from mock import patch
+from unittest.mock import patch
 
 from lib.helpers.wordlist_helper import WordList
 from lib.helpers.wordlist_helper import DEFAULT_WORDLIST_FILE

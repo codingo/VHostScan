@@ -32,6 +32,9 @@ def test_parse_arguments_default_value(tmpdir):
         'output_json': None,
         'output_grepable' : None,
         'ssl': False,
+        'prefix': False,
+        'suffix': False,
+        'verbose': False
     }
     
     assert vars(arguments) == expected_arguments
@@ -59,6 +62,9 @@ def test_parse_arguments_custom_arguments(tmpdir):
         '--user-agent', 'some-user-agent',
         '--waf',
         '-oN', '/tmp/on',
+        '--prefix','dev-',
+        '--suffix','test',
+        '-v'
     ]
 
     arguments = cli_argument_parser().parse(argv)
@@ -83,6 +89,9 @@ def test_parse_arguments_custom_arguments(tmpdir):
         'output_normal': '/tmp/on',
         'output_json': None,
         'output_grepable' : None,
+        'prefix': 'dev-',
+        'suffix': 'test',
+        'verbose': True
     }
 
     assert vars(arguments) == expected_arguments
