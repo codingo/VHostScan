@@ -35,8 +35,9 @@ class output_helper(object):
     def output_normal_likely(self):
         uniques = False
         depth = str(self.scanner.unique_depth)
-        output = "\n[+] Most likely matches with a unique count "\
-                 "of {} or less:".format(depth)
+        output = (
+            "\n[+] Most likely matches with a unique count "
+            "of {} or less:").format(depth)
 
         for p in self.scanner.likely_matches():
             output += "\n\t[>] {}".format(p)
@@ -45,8 +46,9 @@ class output_helper(object):
         if(uniques):
             return output
         else:
-            return "\n[!] No matches with an" \
-                    " unique count of {} or less.".format(depth)
+            return (
+                "\n[!] No matches with an"
+                " unique count of {} or less.").format(depth)
 
     def output_json(self, filename):
         file = file_helper(filename)
