@@ -77,4 +77,22 @@ class TestWordList(unittest.TestCase):
             wordlist, wordlist_types = self.wordlist.get_wordlist(None,None,suffix)
             self.assertEqual(wordlist, expected_wordlist)
 
+    def test_words_with_host_and_prefix(self):
+        stdin_wordlist = ['www.%s']
+        expected_wordlist = stdin_wordlist + ['test-www.%s']
+        prefix = 'test-'
+        with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types = self.wordlist.get_wordlist(None, prefix)
+            self.assertEqual(wordlist, expected_wordlist)
+
+    def test_words_with_host_and_suffix(self):
+        stdin_wordlist = ['www.%s']
+        expected_wordlist = stdin_wordlist + ['wwwtest.%s']
+        suffix = 'test'
+        with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types = self.wordlist.get_wordlist(None,None,suffix)
+            self.assertEqual(wordlist, expected_wordlist)
+
+
+
 
