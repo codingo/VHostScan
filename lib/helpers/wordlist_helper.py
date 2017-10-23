@@ -19,7 +19,11 @@ class WordList:
         return list(line for line in sys.stdin.read().splitlines()) \
             if not sys.stdin.isatty() else []
 
-    def get_wordlist(self, wordlist_files=None):
+    def get_wordlist(self,
+                     wordlist_files=None,
+                     wordlist_prefix=False,
+                     wordlist_suffix=False):
+
         default_wordlist_file = DEFAULT_WORDLIST_FILE
 
         stdin_words = self.get_stdin_wordlist()
@@ -29,13 +33,53 @@ class WordList:
 
         combined_files = wordlist_files or default_wordlist_file
         combined = get_combined_word_lists(combined_files)
+
         if combined:
             words_type = 'wordlists: {}'.format(
                 ', '.join(combined['file_paths']))
             self.set_words(words_type=words_type, words=combined['words'])
+
+        # Apply prefixes
+        if wordlist_prefix:
+            prefixed = []
+            for word in self.wordlist:
+                if(word == '%s'):
+                    continue
+                elif(self.valid_ip(word)):
+                    continue
+                else:
+                    prefixed.append(wordlist_prefix + word)
+
+            if len(prefixed) > 0:
+                self.wordlist = self.wordlist + prefixed
+
+        if wordlist_suffix:
+            suffixed = []
+            for word in self.wordlist:
+                if(word == '%s'):
+                    continue
+                elif(self.valid_ip(word)):
+                    continue
+                elif(".%s" in word):
+                    split = word.split(".")
+                    suffixed.append(split[0] + wordlist_suffix + ".%s")
+                else:
+                    suffixed.append(word + wordlist_suffix)
+
+            if len(suffixed) > 0:
+                self.wordlist = self.wordlist + suffixed
 
         return self.wordlist, self.wordlist_types
 
     def set_words(self, words_type, words):
         self.wordlist_types.append(words_type)
         self.wordlist.extend(words)
+
+    def valid_ip(self, address):
+        try:
+            host_bytes = address.split('.')
+            valid = [int(b) for b in host_bytes]
+            valid = [b for b in valid if b >= 0 and b <= 255]
+            return len(host_bytes) == 4 and len(valid) == 4
+        except:
+            return False

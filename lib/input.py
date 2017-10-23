@@ -35,6 +35,16 @@ class cli_argument_parser(object):
         )
 
         parser.add_argument(
+            '--prefix', dest='prefix', default=False,
+            help='Add a prefix to each item in the word list (dev, test etc)'
+        )
+
+        parser.add_argument(
+            '--suffix', dest='suffix', default=False,
+            help='Add a suffix to each item in the word list'
+        )
+
+        parser.add_argument(
             '-r', dest='real_port', type=int, default=False,
             help='The real port of the webserver to use in headers when '
                  'not 80 (see RFC2616 14.23), useful when pivoting through '
@@ -96,6 +106,11 @@ class cli_argument_parser(object):
             '--waf', dest='add_waf_bypass_headers', action='store_true',
             default=False,
             help='If set then simple WAF bypass headers will be sent.'
+        )
+
+        parser.add_argument(
+            '-v', dest='verbose', action='store_true', default=False,
+            help='Print verbose output'
         )
 
         output = parser.add_mutually_exclusive_group()

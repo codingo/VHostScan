@@ -59,6 +59,7 @@ class virtual_host_scanner(object):
         self.unique_depth = int(kwargs.get('unique_depth', 1))
         self.ignore_http_codes = kwargs.get('ignore_http_codes', '404')
         self.first_hit = kwargs.get('first_hit')
+        self.verbose = kwargs.get('verbose')
 
         self.ignore_content_length = int(
             kwargs.get('ignore_content_length', 0)
@@ -103,6 +104,9 @@ class virtual_host_scanner(object):
 
         for virtual_host in self.wordlist:
             hostname = virtual_host.replace('%s', self.base_host)
+
+            if self.verbose:
+                print("[*] Scanning {hostname}".format(hostname=hostname))
 
             if self.real_port == 80:
                 host_header = hostname

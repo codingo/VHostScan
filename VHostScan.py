@@ -33,7 +33,7 @@ def main():
 
     wordlist_helper = WordList()
     wordlist, wordlist_types = wordlist_helper.get_wordlist(
-        arguments.wordlists)
+        arguments.wordlists, arguments.prefix, arguments.suffix)
 
     if len(wordlist) == 0:
         print("[!] No words found in provided wordlists, unable to scan.")
@@ -82,10 +82,16 @@ def main():
                 wordlist.append(str(ip))
                 wordlist.append(host)
                 wordlist.extend(aliases)
+                if arguments.verbose:
+                    print("[!] Discovered {host}/{ip}. Adding...".
+                          format(ip=str(ip), host=host))
         except (dns.resolver.NXDOMAIN):
             print("[!] Couldn't find any records (NXDOMAIN)")
         except (dns.resolver.NoAnswer):
             print("[!] Couldn't find any records (NoAnswer)")
+
+    if arguments.verbose:
+        print("[>] Scanning with %s items in wordlist" % len(wordlist))
 
     scanner_args = vars(arguments)
     scanner_args.update({
