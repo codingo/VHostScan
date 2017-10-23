@@ -18,6 +18,7 @@ def user_wordlist(request, tmpdir_factory):
 
 @pytest.mark.usefixtures('user_wordlist')
 class TestWordList(unittest.TestCase):
+
     def setUp(self):
         self.wordlist = WordList()
         with open(DEFAULT_WORDLIST_FILE, 'r') as word_file:
@@ -45,3 +46,35 @@ class TestWordList(unittest.TestCase):
         with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
             wordlist, wordlist_types = self.wordlist.get_wordlist()
             self.assertEqual(wordlist, self.default_wordlist)
+
+    def test_ip_using_prefix(self):
+        stdin_wordlist = ['127.0.0.1']
+        prefix = 'dev-'
+        with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types = self.wordlist.get_wordlist(None, prefix)
+            self.assertEqual(wordlist, stdin_wordlist)
+
+    def test_ip_using_suffix(self):
+        stdin_wordlist = ['127.0.0.1']
+        suffix = 'test'
+        with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types = self.wordlist.get_wordlist(None,None,suffix)
+            self.assertEqual(wordlist,stdin_wordlist)
+
+    def test_word_with_prefix(self):
+        stdin_wordlist = ['www','www2','www3']
+        expected_wordlist = stdin_wordlist + ['dev-www','dev-www2','dev-www3']
+        prefix = 'dev-'
+        with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types =  self.wordlist.get_wordlist(None,prefix)
+            self.assertEqual(wordlist,expected_wordlist)
+
+    def test_words_with_suffix(self):
+        stdin_wordlist = ['www','www2','www3']
+        expected_wordlist = stdin_wordlist + ['wwwtest','www2test','www3test']
+        suffix = 'test'
+        with patch('lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types = self.wordlist.get_wordlist(None,None,suffix)
+            self.assertEqual(wordlist, expected_wordlist)
+
+
