@@ -40,6 +40,8 @@ $ pip install -r requirements.txt
 | -r REAL_PORT | The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT). |
 | --ignore-http-codes IGNORE_HTTP_CODES | Comma separated list of http codes to ignore with virtual host scans (default 404). |
 | --ignore-content-length IGNORE_CONTENT_LENGTH | Ignore content lengths of specificed amount. |
+| --prefix PREFIX | Add a prefix to each item in the wordlist, to add dev-<word>, test-<word> etc |
+| --suffix SUFFIX | Add a suffix to each item in the wordlist, to add <word>dev, <word>dev | 
 | --first-hit | Return first successful result. Only use in scenarios where you are sure no catch-all is configured (such as a CTF). |
 | --unique-depth UNIQUE_DEPTH | Show likely matches of page content that is found x times (default 1). |
 | --ssl | If set then connections will be made over HTTPS instead of HTTP. |
@@ -52,6 +54,7 @@ $ pip install -r requirements.txt
 | -oN OUTPUT_NORMAL | Normal output printed to a file when the -oN option is specified with a filename argument. |
 | -oG OUTPUT_GREPABLE | Grepable output printed to a file when the -oG is specified with a filename argument. |
 | -oJ OUTPUT_JSON | JSON output printed to a file when the -oJ option is specified with a filename argument. |
+| -v VERBOSE | Increase the output of the tool to show progress |
 
 
 ## Usage Examples
