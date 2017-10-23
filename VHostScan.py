@@ -83,7 +83,8 @@ def main():
                 wordlist.append(host)
                 wordlist.extend(aliases)
                 if arguments.verbose:
-                    print("[!] Discovered {host}/{ip}. Adding...".format(ip=str(ip), host=host))
+                    print("[!] Discovered {host}/{ip}. Adding...".
+                          format(ip=str(ip), host=host))
         except (dns.resolver.NXDOMAIN):
             print("[!] Couldn't find any records (NXDOMAIN)")
         except (dns.resolver.NoAnswer):

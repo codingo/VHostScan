@@ -19,7 +19,11 @@ class WordList:
         return list(line for line in sys.stdin.read().splitlines()) \
             if not sys.stdin.isatty() else []
 
-    def get_wordlist(self, wordlist_files=None, wordlist_prefix=False, wordlist_suffix=False):
+    def get_wordlist(self,
+                     wordlist_files=None,
+                     wordlist_prefix=False,
+                     wordlist_suffix=False):
+
         default_wordlist_file = DEFAULT_WORDLIST_FILE
 
         stdin_words = self.get_stdin_wordlist()
@@ -63,8 +67,8 @@ class WordList:
                     suffixed.append(word + wordlist_suffix)
 
             if len(suffixed) > 0:
-                self.wordlist = self.wordlist + suffixed            
-        
+                self.wordlist = self.wordlist + suffixed
+
         return self.wordlist, self.wordlist_types
 
     def set_words(self, words_type, words):
@@ -75,7 +79,7 @@ class WordList:
         try:
             host_bytes = address.split('.')
             valid = [int(b) for b in host_bytes]
-            valid = [b for b in valid if b >= 0 and b<=255]
+            valid = [b for b in valid if b >= 0 and b <= 255]
             return len(host_bytes) == 4 and len(valid) == 4
         except:
             return False
