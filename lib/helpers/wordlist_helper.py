@@ -37,14 +37,45 @@ class WordList:
 
         # Apply prefixes
         if wordlist_prefix:
-            prefixed = [wordlist_prefix + word for word in self.wordlist]
-            self.wordlist = self.wordlist + prefixed
+            prefixed = []
+            for word in self.wordlist:
+                if(word == '%s'):
+                    continue
+                elif(self.valid_ip(word)):
+                    continue
+                else:
+                    prefixed.append(wordlist_prefix + word)
 
-        #if wordlist_suffix:
-            
+            if len(prefixed) > 0:
+                self.wordlist = self.wordlist + prefixed
 
+        if wordlist_suffix:
+            suffixed = []
+            for word in self.wordlist:
+                if(word == '%s'):
+                    continue
+                elif(self.valid_ip(word)):
+                    continue
+                elif(".%s" in word):
+                    split = word.split(".")
+                    suffixed.append(split[0] + wordlist_suffix + ".%s")
+                else:
+                    suffixed.append(word + wordlist_suffix)
+
+            if len(suffixed) > 0:
+                self.wordlist = self.wordlist + suffixed            
+        
         return self.wordlist, self.wordlist_types
 
     def set_words(self, words_type, words):
         self.wordlist_types.append(words_type)
         self.wordlist.extend(words)
+
+    def valid_ip(self, address):
+        try:
+            host_bytes = address.split('.')
+            valid = [int(b) for b in host_bytes]
+            valid = [b for b in valid if b >= 0 and b<=255]
+            return len(host_bytes) == 4 and len(valid) == 4
+        except:
+            return False
