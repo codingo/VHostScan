@@ -6,32 +6,39 @@ import hashlib
 import pandas as pd
 import time
 from lib.core.discovered_host import *
+
 import urllib3
+urllib3.disable_warnings()
 
 DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) '\
                      'AppleWebKit/537.36 (KHTML, like Gecko) '\
                      'Chrome/61.0.3163.100 Safari/537.36'
 
-urllib3.disable_warnings()
+try:
+    assert requests.__version__ != "2.18.0"
+    import requests.packages.urllib3.util.ssl_ as ssl_
+    import requests.packages.urllib3.connection as connection
+except (ImportError, AssertionError, AttributeError):
+    import urllib3.util.ssl_ as ssl_
+    import urllib3.connection as connection
 
-'''
-from urllib3.util import ssl_
+# print("Using requests " + requests.__version__)
 
 _target_host = None
-_orig_wrap_socket = ssl_.ssl_wrap_socket
+
 
 def _ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
                      ca_certs=None, server_hostname=None,
                      ssl_version=None, ciphers=None, ssl_context=None,
                      ca_cert_dir=None):
-    _orig_wrap_socket(sock, keyfile=keyfile, certfile=certfile,
-                      cert_reqs=cert_reqs, ca_certs=ca_certs,
-                      server_hostname=_target_host, ssl_version=ssl_version,
-                      ciphers=ciphers, ssl_context=ssl_context,
-                      ca_cert_dir=ca_cert_dir)
+    return ssl_.ssl_wrap_socket(sock, keyfile=keyfile, certfile=certfile,
+                                cert_reqs=cert_reqs, ca_certs=ca_certs,
+                                server_hostname=_target_host,
+                                ssl_version=ssl_version, ciphers=ciphers,
+                                ssl_context=ssl_context,
+                                ca_cert_dir=ca_cert_dir)
 
-ssl_.ssl_wrap_socket = _ssl_wrap_socket
-'''
+connection.ssl_wrap_socket = _ssl_wrap_socket
 
 
 class virtual_host_scanner(object):
