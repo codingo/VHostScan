@@ -11,7 +11,7 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 * Locate the outliers in catch-all scenarios where results have dynamic content on the page (such as the time)
 * Identify aliases by tweaking the unique depth of matches
 * Wordlist supports standard words and a variable to input a base hostname (for e.g. dev.%s from the wordlist would be run as dev.BASE_HOST)
-* Work over HTTP and HTTPS
+* Works over HTTP and HTTPS
 * Ability to set the real port of the webserver to use in headers when pivoting through ssh/nc
 * Add simple response headers to bypass some WAF products
 * Identify new targets by using reverse lookups and append to wordlist
