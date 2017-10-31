@@ -1,5 +1,5 @@
-from lib.core.discovered_host import *
-from lib.helpers.file_helper import *
+from ..core.discovered_host import *
+from .file_helper import *
 import time
 from fuzzywuzzy import fuzz
 import itertools
