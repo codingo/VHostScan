@@ -27,5 +27,6 @@ with open("README.md") as f:
             ]
         },
         install_requires=dependencies('requirements.txt'),
+        setup_requires=['pytest-runner'],
         tests_require=dependencies('test-requirements.txt'),
         include_package_data=True)

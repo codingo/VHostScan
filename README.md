@@ -104,4 +104,11 @@ pip install -r test-requirements.txt
 pytest
 ```
 
+Or you can optionally run:
+
+```bash
+pip install -r test-requirements.txt
+python setup.py test
+```
+
 If you're thinking of adding a new feature to the project, consider also contributing with a couple of tests. A well-tested codebase is a sane codebase. :)

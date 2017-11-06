@@ -3,7 +3,7 @@ import pytest
 import sys
 
 from collections import namedtuple
-from lib.helpers.file_helper import parse_word_list_argument, get_combined_word_lists
+from VHostScan.lib.helpers.file_helper import parse_word_list_argument, get_combined_word_lists
 
 WORDLIST_FILES = {
     'simpsons': ['marge', 'bart', 'homer', 'lisa', 'maggie'],
