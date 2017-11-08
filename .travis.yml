@@ -8,6 +8,6 @@ install:
   - pip install -r test-requirements.txt
   - pip install pep8 
 before_script:
-  - pep8 -v *.py lib/
+  - pep8 -v *.py VHostScan/
 script:
   - pytest
