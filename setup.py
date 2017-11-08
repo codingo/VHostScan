@@ -8,6 +8,11 @@ def dependencies(file):
 
 
 with open("README.md") as f:
+    try:
+        import numpy
+        num_installed = True
+    except ImportError:
+        num_installed = False
     setup(
         name="VHostScan",
         license="GPLv3",
@@ -23,10 +28,11 @@ with open("README.md") as f:
         package_data={'VHostScan': ['*.txt']},
         entry_points={
             'console_scripts': [
-                'vhostscan = VHostScan.VHostScan:main'
+                'VHostScan = VHostScan.VHostScan:main'
             ]
         },
         install_requires=dependencies('requirements.txt'),
-        setup_requires=['pytest-runner'],
+        setup_requires=['pytest-runner',
+                        '' if num_installed else 'numpy==1.12.0'],
         tests_require=dependencies('test-requirements.txt'),
         include_package_data=True)
