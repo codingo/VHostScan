@@ -22,7 +22,7 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 # Install Requirements
 
-Using pip install via:
+Install via pip using:
 
 ```bash
 $ pip install -r requirements.txt
@@ -69,6 +69,13 @@ The most straightforward example runs the default wordlist against example.com u
 
 ```bash
 $ VHostScan -t example.com
+```
+
+### Quick Example with SSL
+If your connection requires SSL, you can use:
+
+```bash
+$ VHostScan.py -t example.com --ssl
 ```
 
 ![VHOSTScan Wordlist example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Example.png)
