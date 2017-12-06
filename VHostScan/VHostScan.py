@@ -1,22 +1,19 @@
 #!/usr/bin/python
 
-import os
 import sys
 import dns.resolver
 from argparse import ArgumentParser
 from socket import gethostbyaddr
-from lib.core.virtual_host_scanner import *
-from lib.helpers.output_helper import *
-from lib.helpers.file_helper import load_random_user_agents
-from lib.helpers.wordlist_helper import WordList
-from lib.core.__version__ import __version__
-from lib.input import cli_argument_parser
+from pkg_resources import resource_filename
+from .lib.core.virtual_host_scanner import *
+from .lib.helpers.output_helper import *
+from .lib.helpers.file_helper import load_random_user_agents
+from .lib.helpers.wordlist_helper import WordList
+from .lib.core.__version__ import __version__
+from .lib.input import cli_argument_parser
 
-DEFAULT_WORDLIST_FILE = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'wordlists',
-    'virtual-host-scanning.txt'
-)
+DEFAULT_WORDLIST_FILE = resource_filename(
+    'VHostScan', 'wordlists/virtual-host-scanning.txt')
 
 
 def print_banner():

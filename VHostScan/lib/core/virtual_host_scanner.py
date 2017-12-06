@@ -5,7 +5,7 @@ import requests
 import hashlib
 import pandas as pd
 import time
-from lib.core.discovered_host import *
+from .discovered_host import *
 
 import urllib3
 urllib3.disable_warnings()

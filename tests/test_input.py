@@ -1,7 +1,7 @@
 import argparse
 import pytest
 
-from lib.input import cli_argument_parser
+from VHostScan.lib.input import cli_argument_parser
 
 def test_parse_arguments_default_value(tmpdir):
     words = ['word1', 'word2', 'word3']

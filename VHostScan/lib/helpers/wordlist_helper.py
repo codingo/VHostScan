@@ -1,13 +1,10 @@
 import sys
-import os
-from lib.helpers.file_helper import get_combined_word_lists
+from .file_helper import get_combined_word_lists
+from pkg_resources import resource_filename
 
-DEFAULT_WORDLIST_FILE = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    '../..',
-    'wordlists',
-    'virtual-host-scanning.txt'
-)
+
+DEFAULT_WORDLIST_FILE = resource_filename(
+    'VHostScan', 'wordlists/virtual-host-scanning.txt')
 
 
 class WordList:

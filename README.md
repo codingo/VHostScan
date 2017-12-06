@@ -28,6 +28,9 @@ Install via pip using:
 $ pip install -r requirements.txt
 ```
 
+Or simply run `python setup.py install` and the dependencies should be installed. If there is an issue regarding
+running `python setup.py build_ext`, you will need to reinstall `numpy` using `pip uninstall numpy` and `pip install numpy==1.12.0`. This should resolve the issue as there are sometimes issues with numpy being installed through setup.py.
+
 # Usage
 
 | Argument        | Description |
@@ -65,7 +68,7 @@ _Note that a number of these examples reference 10.10.10.29. This IP refers to B
 The most straightforward example runs the default wordlist against example.com using the default of port 80:
 
 ```bash
-$ VHostScan.py -t example.com
+$ VHostScan -t example.com
 ```
 
 ### Quick Example with SSL
@@ -81,13 +84,13 @@ $ VHostScan.py -t example.com --ssl
 Say you have an SSH port forward listening on port 4444 fowarding traffic to port 80 on example.com's development machine. You could use the following to make VHostScan connect through your SSH tunnel via localhost:4444 but format the header requests to suit connecting straight to port 80:
 
 ```bash
-$ VHostScan.py -t localhost -b example.com -p 4444 -r 80
+$ VHostScan -t localhost -b example.com -p 4444 -r 80
 ```
 
 ### STDIN
 VHostScan Supports piping from other applications and will treat information passed to VHostScan as wordlist data, for example:
 ```bash
-$ cat bank.htb | VHostScan.py -t 10.10.10.29
+$ cat bank.htb | VHostScan -t 10.10.10.29
 ```
 
 ![VHOSTScan STDIN Example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Pipe%20Example.png)
@@ -95,7 +98,7 @@ $ cat bank.htb | VHostScan.py -t 10.10.10.29
 ### STDIN and WordList
 You can still specify a wordlist to use along with stdin. In these cases wordlist information will be appended to stdin. For example:
 ```bash
-$ echo -e 'a.example.com\b.example.com' | VHostScan.py -t localhost -w ./wordlists/wordlist.txt
+$ echo -e 'a.example.com\b.example.com' | VHostScan -t localhost -w ./wordlists/wordlist.txt
 ```
 ### Fuzzy Logic
 Here is an example with fuzzy logic enabled. You can see the last comparison is much more similar than the first two (it is comparing the content not the actual hashes):
@@ -109,6 +112,13 @@ The project includes a small battery of tests. It's really simple to run the tes
 ```bash
 pip install -r test-requirements.txt
 pytest
+```
+
+Or you can optionally run:
+
+```bash
+pip install -r test-requirements.txt
+python setup.py test
 ```
 
 If you're thinking of adding a new feature to the project, consider also contributing with a couple of tests. A well-tested codebase is a sane codebase. :)
