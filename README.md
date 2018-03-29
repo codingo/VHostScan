@@ -75,7 +75,7 @@ $ VHostScan -t example.com
 If your connection requires SSL, you can use:
 
 ```bash
-$ VHostScan.py -t example.com --ssl
+$ VHostScan -t example.com --ssl
 ```
 
 ![VHOSTScan Wordlist example](https://github.com/codingo/codingo.github.io/blob/master/assets/Bank%20VHOST%20Example.png)
