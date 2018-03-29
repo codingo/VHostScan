@@ -22,13 +22,13 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 # Install Requirements
 
-Install via pip using:
+Install using:
 
 ```bash
-$ pip install -r requirements.txt
+$ python setup.py install
 ```
 
-Or simply run `python setup.py install` and the dependencies should be installed. If there is an issue regarding
+Dependencies will then be installed and VHostScan will be added to your path. If there is an issue regarding
 running `python setup.py build_ext`, you will need to reinstall `numpy` using `pip uninstall numpy` and `pip install numpy==1.12.0`. This should resolve the issue as there are sometimes issues with numpy being installed through setup.py.
 
 # Usage
