@@ -1,6 +1,10 @@
 import json
 import os
 
+from pkg_resources import resource_filename
+
+DEFAULT_UA_LIST = resource_filename(
+    'VHostScan', 'lib/ua-random-list.txt')
 
 class file_helper(object):
     """description of class"""
@@ -62,5 +66,5 @@ def get_combined_word_lists(argument):
 
 
 def load_random_user_agents():
-    with open('./lib/ua-random-list.txt') as f:
-        return f.readlines()
+    with open(DEFAULT_UA_LIST) as f:
+        return f.read().splitlines()
