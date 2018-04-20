@@ -6,6 +6,7 @@ from pkg_resources import resource_filename
 DEFAULT_UA_LIST = resource_filename(
     'VHostScan', 'lib/ua-random-list.txt')
 
+
 class file_helper(object):
     """description of class"""
     def __init__(self, output_file):
