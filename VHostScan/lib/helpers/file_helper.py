@@ -15,11 +15,12 @@ class file_helper(object):
     def check_directory(self):
         directory = os.path.dirname(self.output_file)
 
-        try:
-            os.stat(directory)
-        except:
-            os.mkdir(directory)
-            print("[!] %s didn't exist and has been created." % directory)
+        if directory != '':
+            try:
+                os.stat(directory)
+            except:
+                os.mkdir(directory)
+                print("[!] %s didn't exist and has been created." % directory)
 
     def is_json(json_file):
         try:
