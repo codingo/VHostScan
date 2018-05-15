@@ -74,6 +74,6 @@ class WordList:
 
     def valid_ip(self, address):
         try:
-            return ip_address(address.decode("utf8", "replace")) is not None
+            return ip_address(address) is not None
         except:
             return False
