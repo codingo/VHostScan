@@ -74,9 +74,6 @@ class WordList:
 
     def valid_ip(self, address):
         try:
-            host_bytes = address.split('.')
-            valid = [int(b) for b in host_bytes]
-            valid = [b for b in valid if b >= 0 and b <= 255]
-            return len(host_bytes) == 4 and len(valid) == 4
+            return ip_address(address.decode("utf8", "replace")) != None
         except:
             return False
