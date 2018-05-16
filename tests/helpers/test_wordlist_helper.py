@@ -48,14 +48,14 @@ class TestWordList(unittest.TestCase):
             self.assertEqual(wordlist, self.default_wordlist)
 
     def test_ip_using_prefix(self):
-        stdin_wordlist = ['127.0.0.1']
+        stdin_wordlist = ['127.0.0.1', '::1']
         prefix = 'dev-'
         with patch('VHostScan.lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
             wordlist, wordlist_types = self.wordlist.get_wordlist(None, prefix)
             self.assertEqual(wordlist, stdin_wordlist)
 
     def test_ip_using_suffix(self):
-        stdin_wordlist = ['127.0.0.1']
+        stdin_wordlist = ['127.0.0.1', '::1']
         suffix = 'test'
         with patch('VHostScan.lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
             wordlist, wordlist_types = self.wordlist.get_wordlist(None,None,suffix)
