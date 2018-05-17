@@ -25,7 +25,7 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 Install using:
 
 ```bash
-$ python setup.py install
+$ python3 setup.py install
 ```
 
 Dependencies will then be installed and VHostScan will be added to your path. If there is an issue regarding
