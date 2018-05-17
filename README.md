@@ -29,7 +29,7 @@ $ python3 setup.py install
 ```
 
 Dependencies will then be installed and VHostScan will be added to your path. If there is an issue regarding
-running `python setup.py build_ext`, you will need to reinstall `numpy` using `pip uninstall numpy` and `pip install numpy==1.12.0`. This should resolve the issue as there are sometimes issues with numpy being installed through setup.py.
+running `python3 setup.py build_ext`, you will need to reinstall `numpy` using `pip uninstall numpy` and `pip install numpy==1.12.0`. This should resolve the issue as there are sometimes issues with numpy being installed through setup.py.
 
 # Usage
 
@@ -118,7 +118,7 @@ Or you can optionally run:
 
 ```bash
 pip install -r test-requirements.txt
-python setup.py test
+python3 setup.py test
 ```
 
 If you're thinking of adding a new feature to the project, consider also contributing with a couple of tests. A well-tested codebase is a sane codebase. :)
