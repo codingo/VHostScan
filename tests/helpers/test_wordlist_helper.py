@@ -61,6 +61,20 @@ class TestWordList(unittest.TestCase):
             wordlist, wordlist_types = self.wordlist.get_wordlist(None,None,suffix)
             self.assertEqual(wordlist,stdin_wordlist)
 
+    def test_ipv6_using_prefix(self):
+        stdin_wordlist = ['::1']
+        prefix = 'dev-'
+        with patch('VHostScan.lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types = self.wordlist.get_wordlist(None, prefix)
+            self.assertEqual(wordlist, stdin_wordlist)
+
+    def test_ipv6_using_suffix(self):
+        stdin_wordlist = ['::1']
+        suffix = 'test'
+        with patch('VHostScan.lib.helpers.wordlist_helper.WordList.get_stdin_wordlist', return_value=stdin_wordlist):
+            wordlist, wordlist_types = self.wordlist.get_wordlist(None,None,suffix)
+            self.assertEqual(wordlist,stdin_wordlist)
+
     def test_word_with_prefix(self):
         stdin_wordlist = ['www','www2','www3']
         expected_wordlist = stdin_wordlist + ['dev-www','dev-www2','dev-www3']

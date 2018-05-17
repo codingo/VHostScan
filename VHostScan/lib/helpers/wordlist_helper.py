@@ -1,7 +1,7 @@
 import sys
 from .file_helper import get_combined_word_lists
 from pkg_resources import resource_filename
-
+from ipaddress import ip_address
 
 DEFAULT_WORDLIST_FILE = resource_filename(
     'VHostScan', 'wordlists/virtual-host-scanning.txt')
@@ -74,9 +74,6 @@ class WordList:
 
     def valid_ip(self, address):
         try:
-            host_bytes = address.split('.')
-            valid = [int(b) for b in host_bytes]
-            valid = [b for b in valid if b >= 0 and b <= 255]
-            return len(host_bytes) == 4 and len(valid) == 4
+            return ip_address(address) is not None
         except:
             return False
