@@ -3,7 +3,7 @@ import pytest
 import sys
 
 from collections import namedtuple
-from VHostScan.lib.helpers.file_helper import parse_word_list_argument, get_combined_word_lists
+from VHostScan.lib.helpers.file_helper import parse_word_list_argument, get_combined_word_lists, load_random_user_agents
 
 WORDLIST_FILES = {
     'simpsons': ['marge', 'bart', 'homer', 'lisa', 'maggie'],
@@ -39,3 +39,9 @@ def test_get_combined_word_lists(wordlist):
 
     assert wordlist.files == result['file_paths']
     assert wordlist.words == result['words']
+
+def test_load_random_user_agents():
+    expected = ['Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 
+                'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:55.0) Gecko/20100101 Firefox/55.0']
+
+    assert load_random_user_agents() == expected
