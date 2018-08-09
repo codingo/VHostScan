@@ -11,6 +11,7 @@ def dependencies(imported_file):
 
 with open("README.md") as file:
     try:
+        import numpy
         NUM_INSTALLED = True
     except ImportError:
         NUM_INSTALLED = False
