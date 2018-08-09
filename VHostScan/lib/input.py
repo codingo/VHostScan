@@ -1,15 +1,18 @@
+""" __Doc__ Create parser linklist file """
 from argparse import ArgumentParser
 
-
 class cli_argument_parser(object):
+    """ __Doc__ append to parser class """
     def __init__(self):
         self._parser = self.setup_parser()
 
     def parse(self, argv):
+    """ __Doc__ return parse function """
         return self._parser.parse_args(argv)
 
     @staticmethod
     def setup_parser():
+    """ __Doc__ setup parse function """
         parser = ArgumentParser()
 
         parser.add_argument(
