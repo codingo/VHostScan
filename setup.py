@@ -10,11 +10,12 @@ def dependencies(imported_file):
 
 
 with open("README.md") as file:
+    num_installed = False
     try:
         import numpy
-        NUM_INSTALLED = True
+        num_installed = True
     except ImportError:
-        NUM_INSTALLED = False
+        pass
     setup(
         name="VHostScan",
         license="GPLv3",
