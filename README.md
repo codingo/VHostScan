@@ -122,3 +122,5 @@ python3 setup.py test
 ```
 
 If you're thinking of adding a new feature to the project, consider also contributing with a couple of tests. A well-tested codebase is a sane codebase. :)
+
+Hacktoberfest
