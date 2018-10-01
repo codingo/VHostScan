@@ -34,6 +34,12 @@ class cli_argument_parser(object):
         )
 
         parser.add_argument(
+            '-c', dest='use_color', default='TRUE',
+            help='Enable/Disable colorization '
+                 'FALSE = off, TRUE = on (default TRUE)'
+        )
+        
+        parser.add_argument(
             '-p', dest='port', default=80, type=int,
             help='Set the port to use (default 80).'
         )
