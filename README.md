@@ -107,7 +107,7 @@ Here is an example with fuzzy logic enabled. You can see the last comparison is 
 
 ## Running the tests
 
-The project includes a small battery of tests. It's really simple to run the tests:
+This project includes a small battery of tests. It's really simple to run the tests:
 
 ```bash
 pip install -r test-requirements.txt
