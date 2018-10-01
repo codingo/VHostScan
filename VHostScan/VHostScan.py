@@ -11,84 +11,97 @@ from .lib.helpers.file_helper import load_random_user_agents
 from .lib.helpers.wordlist_helper import WordList
 from .lib.core.__version__ import __version__
 from .lib.input import cli_argument_parser
+from .lib.helpers.color_helper import *
 
 DEFAULT_WORDLIST_FILE = resource_filename(
     'VHostScan', 'wordlists/virtual-host-scanning.txt')
 
 
 def print_banner():
-    print("+-+-+-+-+-+-+-+-+-+  v. %s" % __version__)
-    print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
-    print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
+    board_edge = t_white("+-+-+-+-+-+-+-+-+-+")
+    board_text = ''.join([ t_white(c) if i%2==0 else t_yellow(c) for i,c in enumerate("|V|H|o|s|t|S|c|a|n|") ])
+    
+    version = t_green("  v. %s" % __version__)
+    developer = t_green("  Developed by @codingo_ & @__timk")
+    repo = t_green("  https://github.com/codingo/VHostScan")
 
+    print(board_edge, version)
+    print(board_text, developer)
+    print(board_edge, repo)
+    print()
+
+def extract_arguments():
+    parser = cli_argument_parser()
+    return parser.parse(sys.argv[1:])
 
 def main():
+    arguments = extract_arguments()
+
+    config_colorization(arguments.use_color)
+    
     print_banner()
-
-    parser = cli_argument_parser()
-    arguments = parser.parse(sys.argv[1:])
-
+        
     wordlist_helper = WordList()
     wordlist, wordlist_types = wordlist_helper.get_wordlist(
         arguments.wordlists, arguments.prefix, arguments.suffix)
 
     if len(wordlist) == 0:
-        print("[!] No words found in provided wordlists, unable to scan.")
+        print(t_error("[!] No words found in provided wordlists, unable to scan."))
         sys.exit(1)
 
-    print(
+    print(t_process(
         "[+] Starting virtual host scan for {host} using "
         "port {port} and {inputs}".format(
             host=arguments.target_hosts,
             port=arguments.port,
             inputs=', '.join(wordlist_types),
         )
-    )
+    ))
 
     user_agents = []
     if arguments.user_agent:
-        print('[>] User-Agent specified, using it.')
+        print(t_process('[>] User-Agent specified, using it.'))
         user_agents = [arguments.user_agent]
     elif arguments.random_agent:
-        print('[>] Random User-Agent flag set.')
+        print(t_process('[>] Random User-Agent flag set.'))
         user_agents = load_random_user_agents()
 
     if(arguments.ssl):
-        print("[>] SSL flag set, sending all results over HTTPS.")
+        print(t_process("[>] SSL flag set, sending all results over HTTPS."))
 
     if(arguments.add_waf_bypass_headers):
-        print("[>] WAF flag set, sending simple WAF bypass headers.")
+        print(t_process("[>] WAF flag set, sending simple WAF bypass headers."))
 
-    print("[>] Ignoring HTTP codes: {}".format(arguments.ignore_http_codes))
+    print(t_process("[>] Ignoring HTTP codes: {}".format(arguments.ignore_http_codes)))
 
     if(arguments.ignore_content_length > 0):
-        print(
+        print(t_process(
             "[>] Ignoring Content length: {}".format(
                 arguments.ignore_content_length
             )
-        )
+        ))
 
     if arguments.first_hit:
-        print("[>] First hit is set.")
+        print(t_process("[>] First hit is set."))
 
     if not arguments.no_lookup:
         try:
-            print("[+] Resolving DNS for additional wordlist entries")
+            print(t_process("[+] Resolving DNS for additional wordlist entries"))
             for ip in dns.resolver.query(arguments.target_hosts, 'A'):
                 host, aliases, ips = gethostbyaddr(str(ip))
                 wordlist.append(str(ip))
                 wordlist.append(host)
                 wordlist.extend(aliases)
                 if arguments.verbose:
-                    print("[!] Discovered {host}/{ip}. Adding...".
-                          format(ip=str(ip), host=host))
+                    print(t_error("[!] Discovered {host}/{ip}. Adding...".
+                          format(ip=str(ip), host=host)))
         except (dns.resolver.NXDOMAIN):
-            print("[!] Couldn't find any records (NXDOMAIN)")
+            print(t_error("[!] Couldn't find any records (NXDOMAIN)"))
         except (dns.resolver.NoAnswer):
-            print("[!] Couldn't find any records (NoAnswer)")
+            print(t_error("[!] Couldn't find any records (NoAnswer)"))
 
     if arguments.verbose:
-        print("[>] Scanning with %s items in wordlist" % len(wordlist))
+        print(t_process("[>] Scanning with %s items in wordlist" % len(wordlist)))
 
     scanner_args = vars(arguments)
     scanner_args.update({
@@ -99,24 +112,25 @@ def main():
 
     scanner = virtual_host_scanner(**scanner_args)
     scanner.scan()
+    
     output = output_helper(scanner, arguments)
 
     print(output.output_normal_likely())
 
     if(arguments.fuzzy_logic):
-        print(output.output_fuzzy())
+        print(t_process(output.output_fuzzy()))
 
     if(arguments.output_normal):
         output.write_normal(arguments.output_normal)
-        print("\n[+] Writing normal ouptut to %s" % arguments.output_normal)
+        print(t_process("\n[+] Writing normal ouptut to %s" % arguments.output_normal))
 
     if(arguments.output_json):
         output.output_json(arguments.output_json)
-        print("\n[+] Writing json output to %s" % arguments.output_json)
+        print(t_process("\n[+] Writing json output to %s" % arguments.output_json))
 
     if(arguments.output_grepable):
         output.output_grepable(arguments.output_grepable)
-        print("\n[+] Writing grepable ouptut to %s" % arguments.output_json)
+        print(t_process("\n[+] Writing grepable ouptut to %s" % arguments.output_json))
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from ..core.discovered_host import *
 from .file_helper import *
+from .color_helper import *
 import time
 from fuzzywuzzy import fuzz
 import itertools
@@ -44,11 +45,11 @@ class output_helper(object):
             uniques = True
 
         if(uniques):
-            return output
+            return t_process(output)
         else:
-            return (
+            return t_error((
                 "\n[!] No matches with an"
-                " unique count of {} or less.").format(depth)
+                " unique count of {} or less.").format(depth))
 
     def output_json(self, filename):
         file = file_helper(filename)
@@ -82,7 +83,7 @@ class output_helper(object):
         output['Result'] = result
 
         if not file.is_json(output):
-            print("[!] Json format check failed")
+            print(t_error("[!] Json format check failed"))
 
         file.write_file(json.dumps(output, indent=2))
 

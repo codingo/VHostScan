@@ -2,6 +2,7 @@ import json
 import os
 
 from pkg_resources import resource_filename
+from .color_helper import *
 
 DEFAULT_UA_LIST = resource_filename(
     'VHostScan', 'lib/ua-random-list.txt')
@@ -20,7 +21,7 @@ class file_helper(object):
                 os.stat(directory)
             except:
                 os.mkdir(directory)
-                print("[!] %s didn't exist and has been created." % directory)
+                print(t_error("[!] %s didn't exist and has been created." % directory))
 
     def is_json(json_file):
         try:
