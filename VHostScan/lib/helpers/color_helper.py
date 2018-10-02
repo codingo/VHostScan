@@ -47,12 +47,12 @@ def __convert_to_color(value, color, attrs):
 
 # color-based converter functions
 for color in all_colors:
-    exec('def t_{0} (value, attrs=[]): ' +
-         'return __convert_to_color(value, "{0}", attrs)'.format(color))
+    exec('def t_{} (value, attrs=[]): '.format(color) +
+         'return __convert_to_color(value, "{}", attrs)'.format(color))
 
 for purpose, args in text_settings.items():
-    exec('def t_{0} (value): ' +
-         'return t_{1}(value, attrs={2})'.format(purpose, *args))
+    exec('def t_{} (value): '.format(color) +
+         'return t_{}(value, attrs={})'.format(*args))
 
 '''
 # purpose-based converter functions
