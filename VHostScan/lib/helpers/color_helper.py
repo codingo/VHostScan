@@ -33,11 +33,13 @@ avalable attributes
     'concealed'
 """
 
-def config_colorization (enabled):
+
+def config_colorization(enabled):
     global __COLOR_ENABLED
     __COLOR_ENABLED = False if enabled == 'FALSE' else True
-    
-def __convert_to_color (value, color, attrs):
+
+
+def __convert_to_color(value, color, attrs):
     if __COLOR_ENABLED:
         return colored(str(value), color, attrs=attrs)
     else:
@@ -45,10 +47,12 @@ def __convert_to_color (value, color, attrs):
 
 # color-based converter functions
 for color in all_colors:
-    exec('def t_{0} (value, attrs=[]): return __convert_to_color(value, "{0}", attrs)'.format(color))
+    exec('def t_{0} (value, attrs=[]): ' +
+         'return __convert_to_color(value, "{0}", attrs)'.format(color))
 
 for purpose, args in text_settings.items():
-    exec('def t_{0} (value): return t_{1}(value, attrs={2})'.format(purpose, *args))
+    exec('def t_{0} (value): ' +
+         'return t_{1}(value, attrs={2})'.format(purpose, *args))
 
 '''
 # purpose-based converter functions
@@ -79,7 +83,7 @@ def print_process (value, *a):
 
 def print_result_head (value, *a):
     print(t_result_head(value), *a)
-    
+
 def print_result (value, *a):
     print(t_result(value), *a)
 
@@ -88,7 +92,7 @@ def print_key (value, *a):
 
 def print_link (value, *a):
     print(t_link(value), *a)
-    
+
 def print_error (value, *a):
     print(t_error(value), *a)
 

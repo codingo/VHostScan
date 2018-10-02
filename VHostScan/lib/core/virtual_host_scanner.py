@@ -116,7 +116,9 @@ class virtual_host_scanner(object):
             hostname = virtual_host.replace('%s', self.base_host)
 
             if self.verbose:
-                print(t_process("[*] Scanning {hostname}".format(hostname=hostname)))
+                print(t_process(
+                    "[*] Scanning {hostname}".format(hostname=hostname)
+                ))
 
             if self.real_port == 80:
                 host_header = hostname
@@ -202,12 +204,13 @@ class virtual_host_scanner(object):
         Creates a host using the responce and the hash.
         Prints current result in real time.
         """
-        output = t_result_head('[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(
-            hostname,
-            response.status_code,
-            response.headers.get('content-length'),
-            page_hash
-        ))
+        output = t_result_head(
+            '[#] Found: {} (code: {}, length: {}, hash: {})\n'.format(
+                hostname,
+                response.status_code,
+                response.headers.get('content-length'),
+                page_hash
+            ))
 
         host = discovered_host()
         host.hostname = hostname
@@ -216,7 +219,9 @@ class virtual_host_scanner(object):
         host.contnet = response.content
 
         for key, val in response.headers.items():
-            output += ('  {}'+t_key(':')+' {}\n').format(t_key(key), t_result(val))
+            output += ('  {}'+t_key(':')+' {}\n').format(
+                t_key(key), t_result(val)
+            )
             host.keys.append('{}: {}'.format(key, val))
 
         print(output)
