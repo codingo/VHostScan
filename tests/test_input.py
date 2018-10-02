@@ -91,7 +91,8 @@ def test_parse_arguments_custom_arguments(tmpdir):
         'output_grepable' : None,
         'prefix': 'dev-',
         'suffix': 'test',
-        'verbose': True
+        'verbose': True,
+        'no_color': False
     }
 
     assert vars(arguments) == expected_arguments

@@ -44,7 +44,7 @@ def extract_arguments():
 def main():
     arguments = extract_arguments()
 
-    config_colorization(arguments.use_color)
+    config_colorization(arguments.no_color)
 
     print_banner()
 

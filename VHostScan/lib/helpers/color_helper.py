@@ -34,9 +34,9 @@ avalable attributes
 """
 
 
-def config_colorization(enabled):
+def config_colorization(no_color):
     global __COLOR_ENABLED
-    __COLOR_ENABLED = False if enabled == 'FALSE' else True
+    __COLOR_ENABLED = not no_color
 
 
 def __convert_to_color(value, color, attrs):
