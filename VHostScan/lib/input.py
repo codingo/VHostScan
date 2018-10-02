@@ -34,7 +34,7 @@ class cli_argument_parser(object):
         )
 
         parser.add_argument(
-            '--no-color', dest='no_color', default=False,
+            '--no-color', dest='no_color', action='store_true', default=False,
             help='Disable colorization on interface.'
         )
 
