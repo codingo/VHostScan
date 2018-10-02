@@ -34,7 +34,8 @@ def test_parse_arguments_default_value(tmpdir):
         'ssl': False,
         'prefix': False,
         'suffix': False,
-        'verbose': False
+        'verbose': False,
+        'no-color': False
     }
     
     assert vars(arguments) == expected_arguments
@@ -64,7 +65,8 @@ def test_parse_arguments_custom_arguments(tmpdir):
         '-oN', '/tmp/on',
         '--prefix','dev-',
         '--suffix','test',
-        '-v'
+        '-v',
+        '--no-color'
     ]
 
     arguments = cli_argument_parser().parse(argv)
@@ -92,7 +94,7 @@ def test_parse_arguments_custom_arguments(tmpdir):
         'prefix': 'dev-',
         'suffix': 'test',
         'verbose': True,
-        'no_color': False
+        'no_color': True
     }
 
     assert vars(arguments) == expected_arguments
