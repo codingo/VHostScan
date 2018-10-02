@@ -1,4 +1,4 @@
 pytest==3.2.3
 pytest-mock==1.6.3
 pep8==1.7.0
-termcolor=1.1.0
+termcolor==1.1.0
