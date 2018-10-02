@@ -35,7 +35,7 @@ def test_parse_arguments_default_value(tmpdir):
         'prefix': False,
         'suffix': False,
         'verbose': False,
-        'no-color': False
+        'no_color': False
     }
     
     assert vars(arguments) == expected_arguments
