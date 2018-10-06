@@ -94,13 +94,13 @@ class output_helper(object):
         request_hashes = {}
 
         for host in self.scanner.hosts:
-            request_hashes[host.hash] = (host.hostname, host.content)
+            request_hashes[host.hostname] = host.content
 
         for a, b in itertools.combinations(request_hashes.keys(), 2):
             output += "\n\t[>] {} is {}% similar to {}".format(
-                request_hashes[a][0],
-                fuzz.ratio(request_hashes[a][1], request_hashes[b][1]),
-                request_hashes[b][1]
+                a,
+                fuzz.ratio(request_hashes[a], request_hashes[b]),
+                b
             )
 
         return output
