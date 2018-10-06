@@ -1,13 +1,15 @@
+import hashlib
 import os
 import random
+import time
 
 import requests
-import hashlib
-import pandas as pd
-import time
-from .discovered_host import *
-
 import urllib3
+
+import pandas as pd
+
+from .discovered_host import discovered_host
+
 urllib3.disable_warnings()
 requests.packages.urllib3.disable_warnings()
 
