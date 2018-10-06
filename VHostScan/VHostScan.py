@@ -17,7 +17,7 @@ DEFAULT_WORDLIST_FILE = resource_filename(
 
 
 def print_banner():
-    print("+-+-+-+-+-+-+-+-+-+  v. %s" % __version__)
+    print("+-+-+-+-+-+-+-+-+-+  v. {}".format( __version__))
     print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
     print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
 
@@ -88,7 +88,7 @@ def main():
             print("[!] Couldn't find any records (NoAnswer)")
 
     if arguments.verbose:
-        print("[>] Scanning with %s items in wordlist" % len(wordlist))
+        print("[>] Scanning with {} items in wordlist".format( len(wordlist)))
 
     scanner_args = vars(arguments)
     scanner_args.update({
@@ -108,15 +108,15 @@ def main():
 
     if(arguments.output_normal):
         output.write_normal(arguments.output_normal)
-        print("\n[+] Writing normal ouptut to %s" % arguments.output_normal)
+        print("\n[+] Writing normal ouptut to {}".format(arguments.output_normal))
 
     if(arguments.output_json):
         output.output_json(arguments.output_json)
-        print("\n[+] Writing json output to %s" % arguments.output_json)
+        print("\n[+] Writing json output to {}".format(arguments.output_json))
 
     if(arguments.output_grepable):
         output.output_grepable(arguments.output_grepable)
-        print("\n[+] Writing grepable ouptut to %s" % arguments.output_json)
+        print("\n[+] Writing grepable ouptut to {}".format(arguments.output_json))
 
 
 if __name__ == "__main__":
