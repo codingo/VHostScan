@@ -1,10 +1,8 @@
-from ..core.discovered_host import *
-from .file_helper import *
-import time
-from fuzzywuzzy import fuzz
 import itertools
-import numpy as np
 import json
+import time
+
+from fuzzywuzzy import fuzz
 
 
 class output_helper(object):
