@@ -1,7 +1,9 @@
 import sys
-from .file_helper import get_combined_word_lists
-from pkg_resources import resource_filename
 from ipaddress import ip_address
+
+from pkg_resources import resource_filename
+
+from .file_helper import get_combined_word_lists
 
 DEFAULT_WORDLIST_FILE = resource_filename(
     'VHostScan', 'wordlists/virtual-host-scanning.txt')

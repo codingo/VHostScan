@@ -20,7 +20,8 @@ class file_helper(object):
                 os.stat(directory)
             except:
                 os.mkdir(directory)
-                print("[!] %s didn't exist and has been created." % directory)
+                print("[!] {} didn't exist and has been created.".format(
+                    directory))
 
     def is_json(json_file):
         try:

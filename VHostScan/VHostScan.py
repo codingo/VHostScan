@@ -1,12 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import sys
 import dns.resolver
 from argparse import ArgumentParser
 from socket import gethostbyaddr
 from pkg_resources import resource_filename
-from .lib.core.virtual_host_scanner import *
-from .lib.helpers.output_helper import *
+from .lib.core.virtual_host_soutput_helpercanner import virtual_host_scanner
+from .lib.helpers.output_helper import output_helper
 from .lib.helpers.file_helper import load_random_user_agents
 from .lib.helpers.wordlist_helper import WordList
 from .lib.core.__version__ import __version__
@@ -17,7 +17,7 @@ DEFAULT_WORDLIST_FILE = resource_filename(
 
 
 def print_banner():
-    print("+-+-+-+-+-+-+-+-+-+  v. %s" % __version__)
+    print("+-+-+-+-+-+-+-+-+-+  v. {}".format(__version__))
     print("|V|H|o|s|t|S|c|a|n|  Developed by @codingo_ & @__timk")
     print("+-+-+-+-+-+-+-+-+-+  https://github.com/codingo/VHostScan\n")
 
@@ -88,7 +88,7 @@ def main():
             print("[!] Couldn't find any records (NoAnswer)")
 
     if arguments.verbose:
-        print("[>] Scanning with %s items in wordlist" % len(wordlist))
+        print("[>] Scanning with {} items in wordlist".format(len(wordlist)))
 
     scanner_args = vars(arguments)
     scanner_args.update({
@@ -108,15 +108,18 @@ def main():
 
     if(arguments.output_normal):
         output.write_normal(arguments.output_normal)
-        print("\n[+] Writing normal ouptut to %s" % arguments.output_normal)
+        print("\n[+] Writing normal ouptut to {}".format(
+            arguments.output_normal))
 
     if(arguments.output_json):
         output.output_json(arguments.output_json)
-        print("\n[+] Writing json output to %s" % arguments.output_json)
+        print("\n[+] Writing json output to {}".format(
+            arguments.output_json))
 
     if(arguments.output_grepable):
         output.output_grepable(arguments.output_grepable)
-        print("\n[+] Writing grepable ouptut to %s" % arguments.output_json)
+        print("\n[+] Writing grepable ouptut to {}".format(
+            arguments.output_json))
 
 
 if __name__ == "__main__":
