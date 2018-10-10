@@ -1,10 +1,13 @@
+import itertools
+import json
+import time
+
+import numpy as np
+
+from fuzzywuzzy import fuzz
+
 from ..core.discovered_host import *
 from .file_helper import *
-import time
-from fuzzywuzzy import fuzz
-import itertools
-import numpy as np
-import json
 
 
 class output_helper(object):
@@ -91,7 +94,7 @@ class output_helper(object):
         request_hashes = {}
 
         for host in self.scanner.hosts:
-            request_hashes[host.hash] = host.content
+            request_hashes[host.hostname] = host.content
 
         for a, b in itertools.combinations(request_hashes.keys(), 2):
             output += "\n\t[>] {} is {}% similar to {}".format(
