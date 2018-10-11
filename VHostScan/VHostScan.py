@@ -5,7 +5,7 @@ import dns.resolver
 from argparse import ArgumentParser
 from socket import gethostbyaddr
 from pkg_resources import resource_filename
-from .lib.core.virtual_host_soutput_helpercanner import virtual_host_scanner
+from .lib.core.virtual_host_scanner import virtual_host_scanner
 from .lib.helpers.output_helper import output_helper
 from .lib.helpers.file_helper import load_random_user_agents
 from .lib.helpers.wordlist_helper import WordList
