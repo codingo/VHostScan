@@ -26,7 +26,7 @@ with open("README.md") as file:
         author="codingo",
         version=__version__,
         author_email="codingo@protonmail.com",
-        url="http://github.com/codingo/VHostScan",
+        url="https://github.com/codingo/VHostScan",
         packages=find_packages(exclude=('tests')),
         package_data={'VHostScan': ['*.txt']},
         entry_points={
