@@ -213,7 +213,7 @@ class virtual_host_scanner(object):
         host.hostname = hostname
         host.response_code = response.status_code
         host.hash = page_hash
-        host.contnet = response.content
+        host.content = response.content
 
         for key, val in response.headers.items():
             output += '  {}: {}\n'.format(key, val)
