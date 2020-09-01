@@ -23,14 +23,6 @@ class file_helper(object):
                 print("[!] {} didn't exist and has been created.".format(
                     directory))
 
-    def is_json(json_file):
-        try:
-            with open(json_file, "r") as f:
-                json_object = json.load(f)
-        except ValueError:
-            return False
-        return True
-
     def write_file(self, contents):
         # check if host directory exists, if not create it
         self.check_directory()
