@@ -111,13 +111,6 @@ This project includes a small battery of tests. It's really simple to run the te
 
 ```bash
 pip install -r test-requirements.txt
-pytest
-```
-
-Or you can optionally run:
-
-```bash
-pip install -r test-requirements.txt
 python3 setup.py test
 ```
 
