@@ -1,6 +1,6 @@
 dnspython==1.15.0
 fuzzywuzzy==0.15.1
-numpy==1.12.0
+numpy==1.22.0
 pandas==0.19.2
 requests==2.20.0
 simplejson==3.8.2
