@@ -20,6 +20,13 @@ A virtual host scanner that can be used with pivot tools, detect catch-all scena
 
 ![VHOSTScan Feature Map](https://github.com/codingo/codingo.github.io/blob/master/assets/featureMap.PNG)
 
+# Install on docker (recommended)
+1. ´git clone https://github.com/codingo/VHostScan.git´
+2. ´cd VHostScan´
+3. ´docker build -t vhostscan .`
+
+Then run application `docker run --rm -it vhostscan -t´
+
 # Install Requirements
 
 Install using:
