@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "VHostScan"
+version = "2.0.0"
+description = "A virtual host scanner that performs reverse lookups, can be used with pivot tools, detect catch-all scenarios, aliases and dynamic default pages."
+authors = [
+    {name = "codingo", email = "codingo@protonmail.com"}
+]
+readme = "README.md"
+license = {text = "GPLv3"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: System :: Networking",
+]
+dependencies = [
+    "dnspython>=2.4.0",
+    "fuzzywuzzy[speedup]>=0.18.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "requests>=2.31.0",
+    "simplejson>=3.19.0",
+    "urllib3>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/codingo/VHostScan"
+Repository = "https://github.com/codingo/VHostScan"
+
+[project.scripts]
+VHostScan = "VHostScan.VHostScan:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-mock>=3.10.0",
+    "flake8>=6.0.0",
+    "black>=22.0.0",
+    "mypy>=1.0.0",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+VHostScan = ["*.txt", "wordlists/*.txt", "lib/*.txt"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

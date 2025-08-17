@@ -1,5 +1,7 @@
 import json
 import os
+from pathlib import Path
+from typing import List, Dict, Any, Optional
 
 from pkg_resources import resource_filename
 
@@ -8,30 +10,30 @@ DEFAULT_UA_LIST = resource_filename(
 
 
 class file_helper(object):
-    """description of class"""
-    def __init__(self, output_file):
+    """File helper for output operations"""
+    def __init__(self, output_file: str):
         self.output_file = output_file
 
-    def check_directory(self):
+    def check_directory(self) -> None:
+        """Create directory if it doesn't exist"""
         directory = os.path.dirname(self.output_file)
 
         if directory != '':
-            try:
-                os.stat(directory)
-            except:
-                os.mkdir(directory)
-                print("[!] {} didn't exist and has been created.".format(
-                    directory))
+            Path(directory).mkdir(parents=True, exist_ok=True)
+            if not os.path.exists(directory):
+                print(f"[!] {directory} didn't exist and has been created.")
 
-    def write_file(self, contents):
+    def write_file(self, contents: str) -> None:
+        """Write contents to file with proper encoding"""
         # check if host directory exists, if not create it
         self.check_directory()
 
-        with open(self.output_file, "w") as o:
+        with open(self.output_file, "w", encoding='utf-8') as o:
             o.write(contents)
 
 
-def parse_word_list_argument(argument):
+def parse_word_list_argument(argument: Optional[str]) -> List[str]:
+    """Parse wordlist argument and return list of valid file paths"""
     if not argument:
         return []
 
@@ -46,12 +48,16 @@ def parse_word_list_argument(argument):
     ]
 
 
-def get_combined_word_lists(argument):
+def get_combined_word_lists(argument: Optional[str]) -> Dict[str, Any]:
+    """Get combined wordlists from files"""
+    if not argument:
+        return {'file_paths': [], 'words': []}
+        
     files = parse_word_list_argument(argument)
     words = []
 
     for path in files:
-        with open(path) as f:
+        with open(path, encoding='utf-8') as f:
             words.extend(f.read().splitlines())
 
     return {
@@ -60,6 +66,7 @@ def get_combined_word_lists(argument):
     }
 
 
-def load_random_user_agents():
-    with open(DEFAULT_UA_LIST) as f:
+def load_random_user_agents() -> List[str]:
+    """Load random user agents from file"""
+    with open(DEFAULT_UA_LIST, encoding='utf-8') as f:
         return f.read().splitlines()

@@ -2,6 +2,8 @@ import hashlib
 import os
 import random
 import time
+import warnings
+from typing import List, Optional, Dict, Any
 
 import requests
 import urllib3
@@ -10,38 +12,13 @@ import pandas as pd
 
 from .discovered_host import discovered_host
 
-urllib3.disable_warnings()
-requests.packages.urllib3.disable_warnings()
+# Disable urllib3 warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
-DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) '\
+DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '\
                      'AppleWebKit/537.36 (KHTML, like Gecko) '\
-                     'Chrome/61.0.3163.100 Safari/537.36'
-
-try:
-    assert requests.__version__ != "2.18.0"
-    import requests.packages.urllib3.util.ssl_ as ssl_
-    import requests.packages.urllib3.connection as connection
-except (ImportError, AssertionError, AttributeError):
-    import urllib3.util.ssl_ as ssl_
-    import urllib3.connection as connection
-
-# print("Using requests " + requests.__version__)
-
-_target_host = None
-
-
-def _ssl_wrap_socket(sock, keyfile=None, certfile=None, cert_reqs=None,
-                     ca_certs=None, server_hostname=None,
-                     ssl_version=None, ciphers=None, ssl_context=None,
-                     ca_cert_dir=None):
-    return ssl_.ssl_wrap_socket(sock, keyfile=keyfile, certfile=certfile,
-                                cert_reqs=cert_reqs, ca_certs=ca_certs,
-                                server_hostname=_target_host,
-                                ssl_version=ssl_version, ciphers=ciphers,
-                                ssl_context=ssl_context,
-                                ca_cert_dir=ca_cert_dir)
-
-connection.ssl_wrap_socket = _ssl_wrap_socket
+                     'Chrome/120.0.0.0 Safari/537.36'
 
 
 class virtual_host_scanner(object):
@@ -92,8 +69,11 @@ class virtual_host_scanner(object):
         self.hosts = []
 
         # available user-agents
-        self.user_agents = list(kwargs.get('user_agents')) \
-            or [DEFAULT_USER_AGENT]
+        user_agents_arg = kwargs.get('user_agents')
+        if user_agents_arg:
+            self.user_agents = list(user_agents_arg)
+        else:
+            self.user_agents = [DEFAULT_USER_AGENT]
 
     @property
     def ignore_http_codes(self):
@@ -112,21 +92,32 @@ class virtual_host_scanner(object):
         if not self.real_port:
             self.real_port = self.port
 
+        total_hosts = len(self.wordlist)
+        scanned_count = 0
+
         for virtual_host in self.wordlist:
+            scanned_count += 1
             hostname = virtual_host.replace('%s', self.base_host)
 
             if self.verbose:
-                print("[*] Scanning {hostname}".format(hostname=hostname))
+                progress = f"[{scanned_count}/{total_hosts}]"
+                print(f"[*] {progress} Scanning {hostname}")
 
-            if self.real_port == 80:
+            if self.real_port == 80 and not self.ssl:
+                host_header = hostname
+            elif self.real_port == 443 and self.ssl:
                 host_header = hostname
             else:
-                host_header = '{}:{}'.format(hostname, self.real_port)
+                host_header = f'{hostname}:{self.real_port}'
 
             headers = {
                 'User-Agent': random.choice(self.user_agents),
                 'Host': host_header,
-                'Accept': '*/*'
+                'Accept': '*/*',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Accept-Encoding': 'gzip, deflate',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1'
             }
 
             if self.add_waf_bypass_headers:
@@ -134,45 +125,76 @@ class virtual_host_scanner(object):
                     'X-Originating-IP': '127.0.0.1',
                     'X-Forwarded-For': '127.0.0.1',
                     'X-Remote-IP': '127.0.0.1',
-                    'X-Remote-Addr': '127.0.0.1'
+                    'X-Remote-Addr': '127.0.0.1',
+                    'X-Forwarded-Host': hostname,
+                    'X-Forwarded-Proto': 'https' if self.ssl else 'http'
                 })
 
-            dest_url = '{}://{}:{}/'.format(
-                'https' if self.ssl else 'http',
-                self.target,
-                self.port
-            )
-
-            _target_host = hostname
+            dest_url = f"{'https' if self.ssl else 'http'}://{self.target}:{self.port}/"
 
             try:
-                res = requests.get(dest_url, headers=headers, verify=False)
-            except requests.exceptions.RequestException:
+                # Set timeout and improved error handling
+                res = requests.get(
+                    dest_url, 
+                    headers=headers, 
+                    verify=False, 
+                    timeout=10,
+                    allow_redirects=True,
+                    stream=False
+                )
+            except requests.exceptions.Timeout:
+                if self.verbose:
+                    print(f"[!] Timeout for {hostname}")
+                continue
+            except requests.exceptions.ConnectionError:
+                if self.verbose:
+                    print(f"[!] Connection error for {hostname}")
+                continue
+            except requests.exceptions.RequestException as e:
+                if self.verbose:
+                    print(f"[!] Request error for {hostname}: {e}")
                 continue
 
             if res.status_code in self.ignore_http_codes:
                 continue
 
-            response_length = int(res.headers.get('content-length', 0))
+            # Better content length handling
+            response_length = len(res.content) if res.content else 0
+            content_length_header = res.headers.get('content-length')
+            if content_length_header:
+                try:
+                    response_length = int(content_length_header)
+                except ValueError:
+                    pass
+
             if self.ignore_content_length and \
                self.ignore_content_length == response_length:
                 continue
 
-            # hash the page results to aid in identifing unique content
-            page_hash = hashlib.sha256(res.text.encode('utf-8')).hexdigest()
+            # Hash the page results to aid in identifying unique content
+            try:
+                page_content = res.text if res.text else ''
+                page_hash = hashlib.sha256(page_content.encode('utf-8')).hexdigest()
+            except UnicodeDecodeError:
+                # Fallback for binary content
+                page_hash = hashlib.sha256(res.content).hexdigest()
 
             self.hosts.append(self.create_host(res, hostname, page_hash))
 
-            # add url and hash into array for likely matches
-            self.results.append(hostname + ',' + page_hash)
+            # Add url and hash into array for likely matches
+            self.results.append(f"{hostname},{page_hash}")
 
             if len(self.hosts) >= 1 and self.first_hit:
                 break
 
-            # rate limit the connection, if the int is 0 it is ignored
-            time.sleep(self.rate_limit)
+            # Rate limit the connection, if the int is 0 it is ignored
+            if self.rate_limit > 0:
+                time.sleep(self.rate_limit)
 
         self.completed_scan = True
+        
+        if self.verbose:
+            print(f"\n[+] Scan completed. Found {len(self.hosts)} unique hosts.")
 
     def likely_matches(self):
         if self.completed_scan is False:
