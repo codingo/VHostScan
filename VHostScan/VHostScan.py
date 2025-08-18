@@ -74,18 +74,24 @@ def main():
     if not arguments.no_lookup:
         try:
             print("[+] Resolving DNS for additional wordlist entries")
-            for ip in dns.resolver.query(arguments.target_hosts, 'A'):
-                host, aliases, ips = gethostbyaddr(str(ip))
-                wordlist.append(str(ip))
-                wordlist.append(host)
-                wordlist.extend(aliases)
-                if arguments.verbose:
-                    print("[!] Discovered {host}/{ip}. Adding...".
-                          format(ip=str(ip), host=host))
-        except (dns.resolver.NXDOMAIN):
+            for ip in dns.resolver.resolve(arguments.target_hosts, 'A'):
+                try:
+                    host, aliases, ips = gethostbyaddr(str(ip))
+                    wordlist.append(str(ip))
+                    wordlist.append(host)
+                    wordlist.extend(aliases)
+                    if arguments.verbose:
+                        print("[!] Discovered {host}/{ip}. Adding...".
+                              format(ip=str(ip), host=host))
+                except Exception as e:
+                    if arguments.verbose:
+                        print(f"[!] Could not resolve {ip}: {e}")
+        except dns.resolver.NXDOMAIN:
             print("[!] Couldn't find any records (NXDOMAIN)")
-        except (dns.resolver.NoAnswer):
+        except dns.resolver.NoAnswer:
             print("[!] Couldn't find any records (NoAnswer)")
+        except Exception as e:
+            print(f"[!] DNS resolution error: {e}")
 
     if arguments.verbose:
         print("[>] Scanning with {} items in wordlist".format(len(wordlist)))
@@ -117,9 +123,9 @@ def main():
             arguments.output_json))
 
     if(arguments.output_grepable):
-        output.output_grepable(arguments.output_grepable)
-        print("\n[+] Writing grepable ouptut to {}".format(
-            arguments.output_json))
+        output.write_grepable(arguments.output_grepable)
+        print("\n[+] Writing grepable output to {}".format(
+            arguments.output_grepable))
 
 
 if __name__ == "__main__":

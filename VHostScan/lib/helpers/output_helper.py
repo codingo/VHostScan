@@ -117,6 +117,7 @@ class output_helper(object):
         return output
 
     def output_grepable_detail(self):
+        output = ""
         for host in self.scanner.hosts:
             output += "\n{}\t{}\t{}".format(
                 str(host.hostname),

@@ -1,8 +1,19 @@
 # VHostScan
+
 A virtual host scanner that can be used with pivot tools, detect catch-all scenarios, aliases and dynamic default pages. First presented at SecTalks BNE in September 2017 ([slidedeck](https://docs.google.com/presentation/d/1KDY7bnCpCGabJn8UpmHGSb6z_hi_WGf3ETxzykTNjWY)).
 
-[![Build Status](https://travis-ci.org/codingo/VHostScan.svg?branch=master)](https://travis-ci.org/codingo/VHostScan) [![Python 3.2|3.6](https://img.shields.io/badge/python-3.2|3.6-green.svg)](https://www.python.org/) [![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+**This is an enhanced version of the original VHostScan by [Codingo](https://github.com/codingo) with additional improvements, modernized codebase, and expanded wordlists for better virtual host discovery.**
+
+[![Build Status](https://travis-ci.org/codingo/VHostScan.svg?branch=master)](https://travis-ci.org/codingo/VHostScan) [![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-green.svg)](https://www.python.org/) [![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
  [![License](https://img.shields.io/badge/license-GPL3-_red.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Twitter](https://img.shields.io/badge/twitter-@____timk-blue.svg)](https://twitter.com/__timk) [![Twitter](https://img.shields.io/badge/twitter-@codingo__-blue.svg)](https://twitter.com/codingo_)
+
+## What's New in This Enhanced Version
+
+- **Modernized Codebase**: Updated to Python 3.8+ with type hints and modern practices
+- **Enhanced Wordlists**: New specialized wordlists for cloud, pentesting, and modern infrastructure
+- **Improved Error Handling**: Better error handling and more robust scanning
+- **Performance Optimizations**: Faster scanning with improved efficiency
+- **Extended Documentation**: Comprehensive wordlist documentation and usage examples
 
 
 ## Key Benefits
@@ -29,14 +40,27 @@ Then run application `docker run --rm -it vhostscan -t´
 
 # Install Requirements
 
-Install using:
+VHostScan requires Python 3.8 or higher. Install using:
 
 ```bash
-$ python3 setup.py install
+$ pip install VHostScan
 ```
 
-Dependencies will then be installed and VHostScan will be added to your path. If there is an issue regarding
-running `python3 setup.py build_ext`, you will need to reinstall `numpy` using `pip uninstall numpy` and `pip install numpy==1.12.0`. This should resolve the issue as there are sometimes issues with numpy being installed through setup.py.
+Or install from source:
+
+```bash
+$ git clone https://github.com/codingo/VHostScan.git
+$ cd VHostScan
+$ pip install .
+```
+
+For development:
+
+```bash
+$ pip install -e .
+```
+
+Dependencies will then be installed and VHostScan will be added to your path.
 
 # Usage
 
@@ -45,7 +69,7 @@ running `python3 setup.py build_ext`, you will need to reinstall `numpy` using `
 | -h, --help | Display help message and exit |
 | -t TARGET_HOSTS | Set the target host. |
 | -b BASE_HOST   | Set host to be used during substitution in wordlist (default to TARGET).|
-| -w WORDLISTS | Set the wordlist(s) to use. You may specify multiple wordlists in comma delimited format (e.g. -w "./wordlists/simple.txt, ./wordlists/hackthebox.txt" (default ./wordlists/virtual-host-scanning.txt). |
+| -w WORDLISTS | Set the wordlist(s) to use. You may specify multiple wordlists in comma delimited format (e.g. -w "./wordlists/simple.txt, ./wordlists/hackthebox.txt" (default ./wordlists/virtual-host-scanning.txt). Available wordlists: simple.txt, hackthebox.txt, common-vhosts.txt, pentest-focused.txt, cloud-modern.txt, virtual-host-scanning.txt. |
 | -p PORT  | Set the port to use (default 80). |
 | -r REAL_PORT | The real port of the webserver to use in headers when not 80 (see RFC2616 14.23), useful when pivoting through ssh/nc etc (default to PORT). |
 | --ignore-http-codes IGNORE_HTTP_CODES | Comma separated list of http codes to ignore with virtual host scans (default 404). |
@@ -112,6 +136,38 @@ Here is an example with fuzzy logic enabled. You can see the last comparison is 
 
 ![VHOSTScan Fuzzy Logic Example](https://github.com/codingo/codingo.github.io/blob/master/assets/VHostScan-Fuzzy-Wuzzy.PNG)
 
+## Enhanced Wordlists
+
+VHostScan now includes several specialized wordlists for different scenarios. The original wordlists were created by **Codingo** based on real-world penetration testing experience, and this enhanced version includes additional specialized wordlists for modern infrastructure.
+
+### Available Wordlists
+
+* **virtual-host-scanning.txt** (default) - General purpose virtual host scanning (Original by Codingo)
+* **simple.txt** - Minimal wordlist for quick scans (Original by Codingo)
+* **hackthebox.txt** - HTB machine specific subdomains (Original by Codingo)
+* **common-vhosts.txt** - Extended list of common virtual hosts and cloud services (Enhanced)
+* **pentest-focused.txt** - Pentesting and security assessment focused hosts (New)
+* **cloud-modern.txt** - Modern cloud infrastructure, containers, and DevOps tools (New)
+
+For detailed information about each wordlist, see [WORDLISTS.md](WORDLISTS.md).
+
+### Wordlist Usage Examples
+
+Use the pentest-focused wordlist for security assessments:
+```bash
+$ VHostScan -t target.com -w ./wordlists/pentest-focused.txt
+```
+
+Combine multiple wordlists for comprehensive scanning:
+```bash
+$ VHostScan -t target.com -w "./wordlists/common-vhosts.txt,./wordlists/cloud-modern.txt"
+```
+
+Use cloud-focused wordlist for modern infrastructure:
+```bash
+$ VHostScan -t example.com -w ./wordlists/cloud-modern.txt --ssl
+```
+
 ## Running the tests
 
 This project includes a small battery of tests. It's really simple to run the tests:
@@ -122,3 +178,23 @@ python3 setup.py test
 ```
 
 If you're thinking of adding a new feature to the project, consider also contributing with a couple of tests. A well-tested codebase is a sane codebase. :)
+
+## Credits and Acknowledgments
+
+- **Original Author**: [Codingo](https://github.com/codingo) - Creator of VHostScan
+- **Original Project**: [VHostScan](https://github.com/codingo/VHostScan)
+- **Enhancements**: Community improvements including additional wordlists and code modernization
+- **Contributors**: All the amazing people who have contributed to making VHostScan better
+
+### Enhanced Version Improvements
+
+This enhanced version includes:
+- Modernized Python 3.8+ codebase with type hints
+- Additional specialized wordlists for modern infrastructure
+- Improved error handling and performance optimizations
+- Extended documentation and usage examples
+- Better cloud and container environment support
+
+---
+
+*VHostScan was originally created by Codingo and first presented at SecTalks BNE in September 2017. This enhanced version builds upon that excellent foundation with additional improvements for modern penetration testing and bug bounty hunting.*
